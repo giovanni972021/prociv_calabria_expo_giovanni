@@ -1,203 +1,141 @@
-import React from 'react';
+import React from "react";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
-  Image,
   SafeAreaView,
   StatusBar,
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 export default function HomeScreen({ navigation }) {
   const handleLogin = () => {
-    navigation.navigate('Login');
+    navigation.navigate("Login");
   };
-
   const handleRegister = () => {
-    navigation.navigate('Register');
+    navigation.navigate("Register");
   };
-
   const handleAnonymousAccess = () => {
-    navigation.navigate('Main');
+    navigation.navigate("Main");
   };
-
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#FF6B35" />
-      
-      {/* Header */}
-      <View style={styles.header}>
-        <Image
-          source={require('../../assets/icon.png')}
-          style={styles.logo}
-          resizeMode="contain"
-        />
-        <Text style={styles.title}>Protezione Civile</Text>
-        <Text style={styles.subtitle}>Regione Calabria</Text>
-      </View>
-
-      {/* Main Content */}
-      <View style={styles.content}>
-        <View style={styles.welcomeSection}>
-          <Ionicons name="shield-checkmark" size={80} color="#FF6B35" />
-          <Text style={styles.welcomeTitle}>Benvenuto</Text>
-          <Text style={styles.welcomeText}>
-            Accedi ai servizi di Protezione Civile della Regione Calabria.
-            Visualizza eventi, crea segnalazioni e rimani sempre informato.
+    <>
+      <StatusBar backgroundColor="#2563EB" barStyle="light-content" />
+      <SafeAreaView style={styles.container}>
+        {/* Main Content */}
+        <View style={styles.header}>
+          {/* Contenitore della sezione header */}
+          <Text style={styles.title}>
+            {/* Titolo della schermata */}
+            Accedi ai servizi di{"\n"}ProCiv Calabria {/* Testo principale */}
+          </Text>
+          <Text style={styles.subtitle}>
+            {/* Sottotitolo della schermata */}
+            Seleziona la modalità di accesso che preferisci
           </Text>
         </View>
-
-        {/* Buttons */}
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.primaryButton} onPress={handleLogin}>
-            <Ionicons name="log-in" size={24} color="#fff" style={styles.buttonIcon} />
-            <Text style={styles.primaryButtonText}>Entra con le tue credenziali</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.secondaryButton} onPress={handleRegister}>
-            <Ionicons name="person-add" size={24} color="#FF6B35" style={styles.buttonIcon} />
-            <Text style={styles.secondaryButtonText}>Registrati</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.tertiaryButton} onPress={handleAnonymousAccess}>
-            <Ionicons name="eye" size={24} color="#666" style={styles.buttonIcon} />
-            <Text style={styles.tertiaryButtonText}>Entra in modalità anonima</Text>
-          </TouchableOpacity>
+        <View style={styles.content}>
+          {/* Buttons */}
+          <View style={styles.buttonContainer}>
+            {/* Pulsante per il login */}
+            <TouchableOpacity
+              style={styles.primaryButton}
+              onPress={handleLogin}
+            >
+              <Text style={styles.primaryButtonText}>
+                {/* Testo del pulsante */}
+                Entra con le tue credenziali
+              </Text>
+            </TouchableOpacity>
+            {/* Link per la registrazione */}
+            <TouchableOpacity onPress={handleRegister} activeOpacity={1}>
+              <Text style={styles.linkText}>
+                {/* Testo del link di registrazione */}
+                Non hai delle credenziali?
+                <Text style={styles.registerLink}>Registrati.</Text>
+                {/* Testo del link per la registrazione */}
+              </Text>
+            </TouchableOpacity>
+            {/* Linea divisoria */}
+            <View style={styles.horizontalLine}></View>
+            {/* Linea orizzontale separatrice */}
+            <TouchableOpacity
+              style={styles.secondaryButton}
+              onPress={handleAnonymousAccess}
+            >
+              <Text style={styles.secondaryButtonText}>
+                {/* Testo del pulsante */}
+                Entra in modalità anonima
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-
-      {/* Footer */}
-      <View style={styles.footer}>
-        <Text style={styles.footerText}>
-          © 2024 Regione Calabria - Protezione Civile
-        </Text>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </>
   );
 }
-
 const styles = StyleSheet.create({
+  // Definizione degli stili CSS in un oggetto
   container: {
-    flex: 1,
-    backgroundColor: '#f8f9fa',
+    flex: 1, // Fa in modo che il contenitore si espanda per occupare tutto lo spazio disponibile.
+    backgroundColor: "#FFFFFF", // Imposta il colore di sfondo della schermata.
+    paddingHorizontal: 20, // Aggiunge spazio orizzontale (a sinistra e a destra) nel contenitore.
+    paddingTop: 20, // Aggiunge spazio in alto per evitare che il contenuto si sovrapponga alla status bar.
   },
   header: {
-    backgroundColor: '#FF6B35',
-    paddingVertical: 40,
-    paddingHorizontal: 20,
-    alignItems: 'center',
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
-  },
-  logo: {
-    width: 80,
-    height: 80,
-    marginBottom: 10,
+    alignItems: "flex-start", // Allinea il contenuto del header a sinistra.
+    marginBottom: 30, // Aggiunge spazio sotto il header.
   },
   title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#fff',
-    textAlign: 'center',
+    fontSize: 34, // Imposta la dimensione del font del titolo.
+    fontWeight: "bold", // Imposta il peso del font come grassetto.
+    color: "#1E3A8A", // Colore del testo del titolo.
+    textAlign: "left", // Allinea il testo del titolo a sinistra.
   },
   subtitle: {
-    fontSize: 18,
-    color: '#fff',
-    textAlign: 'center',
-    opacity: 0.9,
-  },
-  content: {
-    flex: 1,
-    paddingHorizontal: 20,
-    paddingVertical: 30,
-    justifyContent: 'space-between',
-  },
-  welcomeSection: {
-    alignItems: 'center',
-    marginBottom: 40,
-  },
-  welcomeTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
-    marginTop: 20,
-    marginBottom: 15,
-  },
-  welcomeText: {
-    fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
-    lineHeight: 24,
-    paddingHorizontal: 10,
-  },
-  buttonContainer: {
-    gap: 15,
+    fontSize: 16, // Imposta la dimensione del font del sottotitolo.
+    color: "#4B5563", // Colore del testo del sottotitolo.
+    marginTop: 10, // Distanza tra il titolo e il sottotitolo.
+    textAlign: "left", // Allinea il testo del sottotitolo a sinistra.
   },
   primaryButton: {
-    backgroundColor: '#FF6B35',
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    borderRadius: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    backgroundColor: "#2563EB", // Colore di sfondo del pulsante (blu).
+    paddingVertical: 15, // Padding verticale (spazio sopra e sotto) nel pulsante.
+    borderRadius: 8, // Angoli arrotondati del pulsante.
+    alignItems: "center", // Allinea il contenuto del pulsante (testo) al centro.
+    marginBottom: 15, // Distanza tra il pulsante e gli altri elementi.
   },
   primaryButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginLeft: 10,
+    color: "#FFFFFF", // Colore del testo del pulsante (bianco).
+    fontSize: 16, // Imposta la dimensione del font.
+    fontWeight: "bold", // Imposta il font in grassetto.
+  },
+  linkText: {
+    fontSize: 16, // Imposta la dimensione del font del testo del link.
+    color: "#6B7280", // Colore del testo del link.
+    textAlign: "left", // Allinea il testo a sinistra.
+    marginTop: 7, // Distanza tra il link e gli altri elementi.
+    marginBottom: 20, // Distanza tra il link e gli altri elementi.
+  },
+  registerLink: {
+    color: "#2563EB", // Colore del testo del link di registrazione (blu).
+    fontWeight: "bold", // Imposta il testo del link in grassetto.
+  },
+  horizontalLine: {
+    borderBottomWidth: 2, // Imposta la larghezza della linea orizzontale.
+    borderBottomColor: "#E5E7EB", // Colore della linea orizzontale.
+    marginVertical: 10, // Aggiunge spazio sopra e sotto la linea.
+    marginBottom: 20, // Distanza tra la linea e gli altri elementi.
   },
   secondaryButton: {
-    backgroundColor: '#fff',
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    borderRadius: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 2,
-    borderColor: '#FF6B35',
+    backgroundColor: "#6B7280", // Colore di sfondo del pulsante (grigio).
+    paddingVertical: 15, // Padding verticale nel pulsante.
+    borderRadius: 8, // Angoli arrotondati del pulsante.
+    alignItems: "center", // Allinea il contenuto del pulsante al centro.
   },
   secondaryButtonText: {
-    color: '#FF6B35',
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginLeft: 10,
-  },
-  tertiaryButton: {
-    backgroundColor: 'transparent',
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    borderRadius: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  tertiaryButtonText: {
-    color: '#666',
-    fontSize: 16,
-    marginLeft: 10,
-  },
-  buttonIcon: {
-    marginRight: 5,
-  },
-  footer: {
-    paddingVertical: 20,
-    paddingHorizontal: 20,
-    alignItems: 'center',
-  },
-  footerText: {
-    fontSize: 12,
-    color: '#999',
-    textAlign: 'center',
+    color: "#FFFFFF", // Colore del testo del pulsante (bianco).
+    fontSize: 16, // Imposta la dimensione del font.
+    fontWeight: "bold", // Imposta il testo in grassetto.
   },
 });
-

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+//login screen salvatore
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -11,33 +12,33 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { authService } from '../services/api';
-import { authUtils } from '../utils/auth';
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { authService } from "../services/api";
+import { authUtils } from "../utils/auth";
 
 export default function LoginScreen({ navigation }) {
-  const [fiscalCode, setFiscalCode] = useState('');
-  const [password, setPassword] = useState('');
+  const [fiscalCode, setFiscalCode] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async () => {
     if (!fiscalCode.trim() || !password.trim()) {
-      Alert.alert('Errore', 'Inserisci codice fiscale e password');
+      Alert.alert("Errore", "Inserisci codice fiscale e password");
       return;
     }
 
     setLoading(true);
-    
+
     try {
-      console.log('🔐 Starting login process...');
-      
+      console.log("🔐 Starting login process...");
+
       // Tentativo di login con API reali
       const response = await authService.login(fiscalCode.trim(), password);
-      
-      console.log('🔐 Login response received:', response);
-      
+
+      console.log("🔐 Login response received:", response);
+
       if (response && response.ok) {
         // Salva i dati di sessione
         await authUtils.saveAuthSession(response);
@@ -49,39 +50,38 @@ export default function LoginScreen({ navigation }) {
           registrationEmail: response.registrationEmail,
         });
 
-        Alert.alert(
-          'Accesso effettuato',
-          'Benvenuto nell\'applicazione!',
-          [
-            {
-              text: 'Continua',
-              onPress: () => navigation.replace('Main'),
-            },
-          ]
-        );
+        Alert.alert("Accesso effettuato", "Benvenuto nell'applicazione!", [
+          {
+            text: "Continua",
+            onPress: () => navigation.replace("Main"),
+          },
+        ]);
       } else {
-        Alert.alert('Errore', 'Credenziali non valide o risposta API non corretta');
+        Alert.alert(
+          "Errore",
+          "Credenziali non valide o risposta API non corretta"
+        );
       }
     } catch (error) {
-      console.error('🔐 Login error caught:', error);
-      
+      console.error("🔐 Login error caught:", error);
+
       // Modalità demo solo per le credenziali di test in caso di errore
-      if (fiscalCode.trim() === 'CPNGNN97R30H501J' && password === '37421056') {
+      if (fiscalCode.trim() === "CPNGNN97R30H501J" && password === "37421056") {
         Alert.alert(
-          'Modalità Demo',
-          'Le API non sono disponibili. Vuoi continuare in modalità demo?',
+          "Modalità Demo",
+          "Le API non sono disponibili. Vuoi continuare in modalità demo?",
           [
-            { text: 'Annulla', style: 'cancel' },
+            { text: "Annulla", style: "cancel" },
             {
-              text: 'Modalità Demo',
+              text: "Modalità Demo",
               onPress: async () => {
                 const mockResponse = {
                   ok: true,
-                  name: 'Utente Demo',
-                  roles: ['citizen'],
-                  profiles: ['Profile:Citizen'],
-                  subProfiles: ['SubProfile:User'],
-                  registrationEmail: 'demo@protezionecivilecalabria.it',
+                  name: "Utente Demo",
+                  roles: ["citizen"],
+                  profiles: ["Profile:Citizen"],
+                  subProfiles: ["SubProfile:User"],
+                  registrationEmail: "demo@protezionecivilecalabria.it",
                 };
 
                 await authUtils.saveAuthSession(mockResponse);
@@ -93,17 +93,20 @@ export default function LoginScreen({ navigation }) {
                   registrationEmail: mockResponse.registrationEmail,
                 });
 
-                navigation.replace('Main');
+                navigation.replace("Main");
               },
             },
           ]
         );
       } else {
-        const errorMessage = error.response?.data?.message || error.message || 'Errore sconosciuto';
-        const statusCode = error.response?.status || 'N/A';
-        
+        const errorMessage =
+          error.response?.data?.message ||
+          error.message ||
+          "Errore sconosciuto";
+        const statusCode = error.response?.status || "N/A";
+
         Alert.alert(
-          'Errore di connessione',
+          "Errore di connessione",
           `Impossibile effettuare il login.\n\nDettagli: ${errorMessage}\nCodice: ${statusCode}\n\nVerifica le credenziali e la connessione internet.`
         );
       }
@@ -113,14 +116,14 @@ export default function LoginScreen({ navigation }) {
   };
 
   const fillTestCredentials = () => {
-    setFiscalCode('CPNGNN97R30H501J');
-    setPassword('37421056');
+    setFiscalCode("CPNGNN97R30H501J");
+    setPassword("37421056");
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.keyboardView}
       >
         <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -138,7 +141,12 @@ export default function LoginScreen({ navigation }) {
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Codice Fiscale</Text>
               <View style={styles.inputWrapper}>
-                <Ionicons name="card" size={20} color="#666" style={styles.inputIcon} />
+                <Ionicons
+                  name="card"
+                  size={20}
+                  color="#666"
+                  style={styles.inputIcon}
+                />
                 <TextInput
                   style={styles.input}
                   value={fiscalCode}
@@ -154,7 +162,12 @@ export default function LoginScreen({ navigation }) {
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Password</Text>
               <View style={styles.inputWrapper}>
-                <Ionicons name="lock-closed" size={20} color="#666" style={styles.inputIcon} />
+                <Ionicons
+                  name="lock-closed"
+                  size={20}
+                  color="#666"
+                  style={styles.inputIcon}
+                />
                 <TextInput
                   style={styles.input}
                   value={password}
@@ -168,7 +181,7 @@ export default function LoginScreen({ navigation }) {
                   style={styles.eyeIcon}
                 >
                   <Ionicons
-                    name={showPassword ? 'eye-off' : 'eye'}
+                    name={showPassword ? "eye-off" : "eye"}
                     size={20}
                     color="#666"
                   />
@@ -181,14 +194,15 @@ export default function LoginScreen({ navigation }) {
               style={styles.testButton}
               onPress={fillTestCredentials}
             >
-              <Text style={styles.testButtonText}>
-                Usa credenziali di test
-              </Text>
+              <Text style={styles.testButtonText}>Usa credenziali di test</Text>
             </TouchableOpacity>
 
             {/* Login Button */}
             <TouchableOpacity
-              style={[styles.loginButton, loading && styles.loginButtonDisabled]}
+              style={[
+                styles.loginButton,
+                loading && styles.loginButtonDisabled,
+              ]}
               onPress={handleLogin}
               disabled={loading}
             >
@@ -205,7 +219,7 @@ export default function LoginScreen({ navigation }) {
             {/* Register Link */}
             <View style={styles.registerContainer}>
               <Text style={styles.registerText}>Non hai un account? </Text>
-              <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+              <TouchableOpacity onPress={() => navigation.navigate("Register")}>
                 <Text style={styles.registerLink}>Registrati qui</Text>
               </TouchableOpacity>
             </View>
@@ -219,7 +233,7 @@ export default function LoginScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f9fa',
+    backgroundColor: "#f8f9fa",
   },
   keyboardView: {
     flex: 1,
@@ -230,21 +244,21 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   header: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 40,
     paddingTop: 20,
   },
   title: {
     fontSize: 28,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: "bold",
+    color: "#333",
     marginTop: 15,
     marginBottom: 10,
   },
   subtitle: {
     fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
+    color: "#666",
+    textAlign: "center",
   },
   form: {
     flex: 1,
@@ -254,17 +268,17 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
+    fontWeight: "600",
+    color: "#333",
     marginBottom: 8,
   },
   inputWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#fff',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#fff",
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
     paddingHorizontal: 15,
     height: 50,
   },
@@ -274,61 +288,60 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 16,
-    color: '#333',
+    color: "#333",
   },
   eyeIcon: {
     padding: 5,
   },
   testButton: {
-    backgroundColor: '#e9ecef',
+    backgroundColor: "#e9ecef",
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 8,
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 20,
   },
   testButtonText: {
-    color: '#666',
+    color: "#666",
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   loginButton: {
-    backgroundColor: '#FF6B35',
+    backgroundColor: "#FF6B35",
     paddingVertical: 15,
     borderRadius: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     marginBottom: 20,
     elevation: 3,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
   },
   loginButtonDisabled: {
-    backgroundColor: '#ccc',
+    backgroundColor: "#ccc",
   },
   loginButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginLeft: 8,
   },
   registerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: 20,
   },
   registerText: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
   },
   registerLink: {
     fontSize: 14,
-    color: '#FF6B35',
-    fontWeight: '600',
+    color: "#FF6B35",
+    fontWeight: "600",
   },
 });
-
