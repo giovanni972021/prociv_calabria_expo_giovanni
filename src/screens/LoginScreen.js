@@ -302,6 +302,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   testButtonText: {
+    //commento
     color: "#666",
     fontSize: 14,
     fontWeight: "500",
