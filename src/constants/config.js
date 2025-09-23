@@ -5,7 +5,7 @@ export const CONFIG = {
 
   // Endpoint API
   ENDPOINTS: {
-    LOGIN: "/api/users/_session",
+    LOGIN: "/api/_session",
     REGISTER: "/registra",
     VERIFY_EMAIL: "/api/email/verify",
     VERIFY_PHONE: "/api/cellular/verify",
