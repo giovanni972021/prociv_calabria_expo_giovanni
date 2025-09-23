@@ -152,7 +152,7 @@ const LoginScreen = ({ navigation }) => {
                 onPress={() => Alert.alert("Funzione non implementata")}
               >
                 <Text style={styles.forgotText}>
-                  Hai dimenticato le{" "}
+                  Hai dimenticato leaaa{" "}
                   <Text style={styles.forgotText2}>credenziali?</Text>
                 </Text>
               </TouchableOpacity>
@@ -269,7 +269,6 @@ const styles = StyleSheet.create({
     color: "#1E3A8A",
     textAlign: "center",
     marginBottom: 20,
-    marginTop: 20,
   },
   form: {
     flex: 1,

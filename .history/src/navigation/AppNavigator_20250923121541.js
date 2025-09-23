@@ -107,7 +107,10 @@ export default function AppNavigator() {
         <Stack.Screen
           name="Login"
           component={LoginScreen}
-          options={{ title: "Accedi", headerShown: false }}
+          options={{
+            title: "Accedi",
+            headerShown: false,
+          }}
         />
         <Stack.Screen
           name="Register"

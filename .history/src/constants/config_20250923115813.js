@@ -17,7 +17,7 @@ export const CONFIG = {
 
   // Credenziali di test
   TEST_CREDENTIALS: {
-    fiscalCode: "LLNRBL80A01G273E",
+    fiscalCode: "CPNGNN97R30H501J",
     password: "89411809",
   },
 

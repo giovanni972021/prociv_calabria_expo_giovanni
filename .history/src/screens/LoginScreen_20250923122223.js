@@ -269,7 +269,7 @@ const styles = StyleSheet.create({
     color: "#1E3A8A",
     textAlign: "center",
     marginBottom: 20,
-    marginTop: 20,
+    marginTop: 10,
   },
   form: {
     flex: 1,

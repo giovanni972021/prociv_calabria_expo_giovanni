@@ -153,7 +153,7 @@ const LoginScreen = ({ navigation }) => {
               >
                 <Text style={styles.forgotText}>
                   Hai dimenticato le{" "}
-                  <Text style={styles.forgotText2}>credenziali?</Text>
+                  <Text style={styles.forgotText2}>credenzialiaaa?</Text>
                 </Text>
               </TouchableOpacity>
             </View>
@@ -269,7 +269,6 @@ const styles = StyleSheet.create({
     color: "#1E3A8A",
     textAlign: "center",
     marginBottom: 20,
-    marginTop: 20,
   },
   form: {
     flex: 1,
