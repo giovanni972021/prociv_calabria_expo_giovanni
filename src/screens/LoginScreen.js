@@ -1,4 +1,3 @@
-//login screen salvatore
 import React, { useState } from "react";
 import {
   View,
@@ -17,11 +16,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { authService } from "../services/api";
 import { authUtils } from "../utils/auth";
 
-export default function LoginScreen({ navigation }) {
+const LoginScreen = ({ navigation }) => {
   const [fiscalCode, setFiscalCode] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+  const [isPressed, setIsPressed] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const handleLogin = async () => {
     if (!fiscalCode.trim() || !password.trim()) {
@@ -32,15 +32,9 @@ export default function LoginScreen({ navigation }) {
     setLoading(true);
 
     try {
-      console.log("🔐 Starting login process...");
-
-      // Tentativo di login con API reali
       const response = await authService.login(fiscalCode.trim(), password);
 
-      console.log("🔐 Login response received:", response);
-
       if (response && response.ok) {
-        // Salva i dati di sessione
         await authUtils.saveAuthSession(response);
         await authUtils.saveUserData({
           name: response.name,
@@ -63,41 +57,21 @@ export default function LoginScreen({ navigation }) {
         );
       }
     } catch (error) {
-      console.error("🔐 Login error caught:", error);
+      console.error("🔐 Login error:", error);
 
-      // Modalità demo solo per le credenziali di test in caso di errore
       if (fiscalCode.trim() === "CPNGNN97R30H501J" && password === "37421056") {
-        Alert.alert(
-          "Modalità Demo",
-          "Le API non sono disponibili. Vuoi continuare in modalità demo?",
-          [
-            { text: "Annulla", style: "cancel" },
-            {
-              text: "Modalità Demo",
-              onPress: async () => {
-                const mockResponse = {
-                  ok: true,
-                  name: "Utente Demo",
-                  roles: ["citizen"],
-                  profiles: ["Profile:Citizen"],
-                  subProfiles: ["SubProfile:User"],
-                  registrationEmail: "demo@protezionecivilecalabria.it",
-                };
+        const mockResponse = {
+          ok: true,
+          name: "Utente Demo",
+          roles: ["citizen"],
+          profiles: ["Profile:Citizen"],
+          subProfiles: ["SubProfile:User"],
+          registrationEmail: "demo@protezionecivilecalabria.it",
+        };
 
-                await authUtils.saveAuthSession(mockResponse);
-                await authUtils.saveUserData({
-                  name: mockResponse.name,
-                  roles: mockResponse.roles,
-                  profiles: mockResponse.profiles,
-                  subProfiles: mockResponse.subProfiles,
-                  registrationEmail: mockResponse.registrationEmail,
-                });
-
-                navigation.replace("Main");
-              },
-            },
-          ]
-        );
+        await authUtils.saveAuthSession(mockResponse);
+        await authUtils.saveUserData(mockResponse);
+        navigation.replace("Main");
       } else {
         const errorMessage =
           error.response?.data?.message ||
@@ -129,106 +103,142 @@ export default function LoginScreen({ navigation }) {
         <ScrollView contentContainerStyle={styles.scrollContent}>
           {/* Header */}
           <View style={styles.header}>
-            <Ionicons name="log-in" size={60} color="#FF6B35" />
-            <Text style={styles.title}>Accedi</Text>
-            <Text style={styles.subtitle}>
-              Inserisci le tue credenziali per accedere
-            </Text>
+            <Text style={styles.subtitle}>Accesso</Text>
+            <Text style={styles.title}>Entra con le tue credenziali</Text>
           </View>
 
           {/* Form */}
           <View style={styles.form}>
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Codice Fiscale</Text>
-              <View style={styles.inputWrapper}>
-                <Ionicons
-                  name="card"
-                  size={20}
-                  color="#666"
-                  style={styles.inputIcon}
-                />
-                <TextInput
-                  style={styles.input}
-                  value={fiscalCode}
-                  onChangeText={setFiscalCode}
-                  placeholder="Inserisci il tuo codice fiscale"
-                  autoCapitalize="characters"
-                  autoCorrect={false}
-                  maxLength={16}
-                />
-              </View>
-            </View>
+            <InputField
+              label="Nome Utente"
+              value={fiscalCode}
+              onChange={setFiscalCode}
+              maxLength={16}
+            />
 
+            {/* Password Field */}
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Password</Text>
-              <View style={styles.inputWrapper}>
-                <Ionicons
-                  name="lock-closed"
-                  size={20}
-                  color="#666"
-                  style={styles.inputIcon}
-                />
+              <View style={styles.passwordContainer}>
                 <TextInput
-                  style={styles.input}
+                  style={styles.passwordInput}
                   value={password}
                   onChangeText={setPassword}
-                  placeholder="Inserisci la tua password"
-                  secureTextEntry={!showPassword}
+                  placeholder="Password"
+                  secureTextEntry={!isPasswordVisible}
+                  autoCapitalize="none"
+                  maxLength={16}
                   autoCorrect={false}
                 />
                 <TouchableOpacity
-                  onPress={() => setShowPassword(!showPassword)}
-                  style={styles.eyeIcon}
+                  onPress={() => setIsPasswordVisible((prev) => !prev)}
+                  style={styles.eyeIconContainer}
                 >
                   <Ionicons
-                    name={showPassword ? "eye-off" : "eye"}
-                    size={20}
-                    color="#666"
+                    name={isPasswordVisible ? "eye-off" : "eye"}
+                    size={24}
+                    color="#333"
                   />
                 </TouchableOpacity>
               </View>
             </View>
 
             {/* Test Credentials Button */}
-            <TouchableOpacity
-              style={styles.testButton}
-              onPress={fillTestCredentials}
-            >
-              <Text style={styles.testButtonText}>Usa credenziali di test</Text>
-            </TouchableOpacity>
+            <TouchableOpacity onPress={fillTestCredentials} />
 
-            {/* Login Button */}
-            <TouchableOpacity
-              style={[
-                styles.loginButton,
-                loading && styles.loginButtonDisabled,
-              ]}
-              onPress={handleLogin}
-              disabled={loading}
-            >
-              {loading ? (
-                <ActivityIndicator color="#fff" />
-              ) : (
-                <>
-                  <Ionicons name="log-in" size={20} color="#fff" />
-                  <Text style={styles.loginButtonText}>Continua</Text>
-                </>
-              )}
-            </TouchableOpacity>
-
-            {/* Register Link */}
-            <View style={styles.registerContainer}>
-              <Text style={styles.registerText}>Non hai un account? </Text>
-              <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-                <Text style={styles.registerLink}>Registrati qui</Text>
+            {/* Forgot Credentials Link */}
+            <View style={styles.forgotContainer}>
+              <TouchableOpacity
+                onPress={() => Alert.alert("Funzione non implementata")}
+              >
+                <Text style={styles.forgotText}>
+                  Hai dimenticato le{" "}
+                  <Text style={styles.forgotText2}>credenziali?</Text>
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
         </ScrollView>
+
+        {/* Continue Button at the bottom */}
+        <View style={styles.bottomContainer}>
+          <Button onPress={handleLogin} loading={loading} text="Continua" />
+        </View>
+
+        {/* Cancel Button */}
+        <View style={styles.bottomContainer}>
+          <Button
+            onPress={() => navigation.goBack()}
+            loading={loading}
+            text="Annulla"
+            isPressed={isPressed}
+            setIsPressed={setIsPressed}
+            isCancel={true}
+          />
+        </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
-}
+};
+
+// Reusable Input Field Component
+const InputField = ({
+  label,
+  value,
+  onChange,
+  placeholder,
+  secureTextEntry,
+  maxLength,
+}) => (
+  <View style={styles.inputContainer}>
+    <Text style={styles.label}>{label}</Text>
+    <TextInput
+      style={styles.input}
+      value={value}
+      onChangeText={onChange}
+      placeholder={placeholder}
+      secureTextEntry={secureTextEntry}
+      autoCapitalize="none"
+      maxLength={maxLength}
+      autoCorrect={false}
+    />
+  </View>
+);
+
+// Reusable Button Component
+const Button = ({
+  onPress,
+  loading,
+  text,
+  isPressed,
+  setIsPressed,
+  isCancel,
+}) => (
+  <TouchableOpacity
+    style={[
+      styles.loginButton,
+      loading && styles.loginButtonDisabled,
+      isCancel && styles.cancelButton,
+      isPressed && styles.cancelButtonPressed,
+    ]}
+    onPress={() => {
+      onPress();
+      if (setIsPressed) setIsPressed(true);
+    }}
+    onPressOut={() => setIsPressed && setIsPressed(false)}
+    disabled={loading}
+  >
+    {loading ? (
+      <ActivityIndicator color="#fff" />
+    ) : (
+      <Text
+        style={[styles.loginButtonText, isCancel && styles.cancelButtonText]}
+      >
+        {text}
+      </Text>
+    )}
+  </TouchableOpacity>
+);
 
 const styles = StyleSheet.create({
   container: {
@@ -241,24 +251,24 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: 20,
-    paddingVertical: 20,
+    paddingVertical: 10,
   },
   header: {
-    alignItems: "center",
     marginBottom: 40,
-    paddingTop: 20,
+    paddingTop: 10,
   },
   title: {
-    fontSize: 28,
+    fontSize: 34,
     fontWeight: "bold",
-    color: "#333",
-    marginTop: 15,
-    marginBottom: 10,
+    color: "#1E3A8A",
+    textAlign: "left",
   },
   subtitle: {
-    fontSize: 16,
-    color: "#666",
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#1E3A8A",
     textAlign: "center",
+    marginBottom: 20,
   },
   form: {
     flex: 1,
@@ -270,45 +280,35 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     color: "#333",
-    marginBottom: 8,
-  },
-  inputWrapper: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: "#ddd",
-    paddingHorizontal: 15,
-    height: 50,
-  },
-  inputIcon: {
-    marginRight: 10,
   },
   input: {
+    height: 50, // Altezza campo
+    fontSize: 16,
+    color: "#333",
+    borderBottomWidth: 2,
+    paddingBottom: 10, // Distanza sotto il testo
+    borderBottomColor: "#333",
+    paddingHorizontal: 0,
+  },
+  passwordContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderBottomWidth: 2,
+    borderBottomColor: "#333",
+    height: 55, // Altezza del campo
+    paddingBottom: 10, // Spazio sotto il testo
+  },
+  passwordInput: {
     flex: 1,
     fontSize: 16,
     color: "#333",
+    paddingVertical: 0,
   },
-  eyeIcon: {
-    padding: 5,
-  },
-  testButton: {
-    backgroundColor: "#e9ecef",
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderRadius: 8,
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  testButtonText: {
-    //commento
-    color: "#666",
-    fontSize: 14,
-    fontWeight: "500",
+  eyeIconContainer: {
+    paddingBottom: 4,
   },
   loginButton: {
-    backgroundColor: "#FF6B35",
+    backgroundColor: "#1E3A8A",
     paddingVertical: 15,
     borderRadius: 12,
     flexDirection: "row",
@@ -326,23 +326,38 @@ const styles = StyleSheet.create({
   },
   loginButtonText: {
     color: "#fff",
+    paddingBottom: 10,
     fontSize: 16,
+  },
+  cancelButton: {
+    backgroundColor: "#fff",
+    borderWidth: 1,
+    borderColor: "black",
+  },
+  cancelButtonPressed: {
+    backgroundColor: "#e0e0e0",
+  },
+  cancelButtonText: {
+    color: "#1E3A8A",
     fontWeight: "bold",
-    marginLeft: 8,
   },
-  registerContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
+  bottomContainer: {
+    justifyContent: "flex-end",
+    paddingHorizontal: 20,
+    paddingBottom: 10,
+  },
+  forgotContainer: {
+    marginBottom: 20,
     alignItems: "center",
-    marginTop: 20,
   },
-  registerText: {
-    fontSize: 14,
-    color: "#666",
+  forgotText: {
+    fontSize: 16,
   },
-  registerLink: {
-    fontSize: 14,
-    color: "#FF6B35",
+  forgotText2: {
+    fontSize: 16,
+    color: "#0037ceff",
     fontWeight: "600",
   },
 });
+
+export default LoginScreen;
