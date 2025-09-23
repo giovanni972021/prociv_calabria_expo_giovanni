@@ -118,12 +118,13 @@ const LoginScreen = ({ navigation }) => {
 
             {/* Password Field */}
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>Password</Text>
+              <Text style={styles.label}>Passwordaaa</Text>
               <View style={styles.passwordContainer}>
                 <TextInput
                   style={styles.passwordInput}
                   value={password}
                   onChangeText={setPassword}
+                  placeholder="Passwordaaa"
                   secureTextEntry={!isPasswordVisible}
                   autoCapitalize="none"
                   maxLength={16}

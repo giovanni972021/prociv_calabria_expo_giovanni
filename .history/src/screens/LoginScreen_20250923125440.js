@@ -118,7 +118,7 @@ const LoginScreen = ({ navigation }) => {
 
             {/* Password Field */}
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>Password</Text>
+              <Text style={styles.label}>Passwordaaaa</Text>
               <View style={styles.passwordContainer}>
                 <TextInput
                   style={styles.passwordInput}

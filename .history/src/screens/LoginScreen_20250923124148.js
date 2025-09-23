@@ -124,6 +124,7 @@ const LoginScreen = ({ navigation }) => {
                   style={styles.passwordInput}
                   value={password}
                   onChangeText={setPassword}
+                  placeholder="Password"
                   secureTextEntry={!isPasswordVisible}
                   autoCapitalize="none"
                   maxLength={16}
