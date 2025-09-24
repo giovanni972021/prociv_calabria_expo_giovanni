@@ -101,13 +101,11 @@ const LoginScreen = ({ navigation }) => {
         style={styles.keyboardView}
       >
         <ScrollView contentContainerStyle={styles.scrollContent}>
-          {/* Header */}
           <View style={styles.header}>
             <Text style={styles.subtitle}>Accesso</Text>
             <Text style={styles.title}>Entra con le tue credenziali</Text>
           </View>
 
-          {/* Form */}
           <View style={styles.form}>
             <InputField
               label="Nome Utente"
@@ -116,7 +114,6 @@ const LoginScreen = ({ navigation }) => {
               maxLength={16}
             />
 
-            {/* Password Field */}
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Password</Text>
               <View style={styles.passwordContainer}>
@@ -142,10 +139,8 @@ const LoginScreen = ({ navigation }) => {
               </View>
             </View>
 
-            {/* Test Credentials Button */}
             <TouchableOpacity onPress={fillTestCredentials} />
 
-            {/* Forgot Credentials Link */}
             <View style={styles.forgotContainer}>
               <TouchableOpacity
                 onPress={() => Alert.alert("Funzione non implementata")}
@@ -159,12 +154,10 @@ const LoginScreen = ({ navigation }) => {
           </View>
         </ScrollView>
 
-        {/* Continue Button at the bottom */}
         <View style={styles.bottomContainer}>
           <Button onPress={handleLogin} loading={loading} text="Continua" />
         </View>
 
-        {/* Cancel Button */}
         <View style={styles.bottomContainer}>
           <Button
             onPress={() => navigation.goBack()}
@@ -180,7 +173,6 @@ const LoginScreen = ({ navigation }) => {
   );
 };
 
-// Reusable Input Field Component
 const InputField = ({
   label,
   value,
@@ -204,7 +196,6 @@ const InputField = ({
   </View>
 );
 
-// Reusable Button Component
 const Button = ({
   onPress,
   loading,
@@ -282,11 +273,11 @@ const styles = StyleSheet.create({
     color: "#333",
   },
   input: {
-    height: 50, // Altezza campo
+    height: 50,
     fontSize: 16,
     color: "#333",
     borderBottomWidth: 2,
-    paddingBottom: 10, // Distanza sotto il testo
+    paddingBottom: 10,
     borderBottomColor: "#333",
     paddingHorizontal: 0,
   },
@@ -295,8 +286,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderBottomWidth: 2,
     borderBottomColor: "#333",
-    height: 55, // Altezza del campo
-    paddingBottom: 10, // Spazio sotto il testo
+    height: 55,
+    paddingBottom: 10,
   },
   passwordInput: {
     flex: 1,
@@ -344,7 +335,6 @@ const styles = StyleSheet.create({
   bottomContainer: {
     justifyContent: "flex-end",
     paddingHorizontal: 20,
-    paddingBottom: 10,
   },
   forgotContainer: {
     marginBottom: 20,

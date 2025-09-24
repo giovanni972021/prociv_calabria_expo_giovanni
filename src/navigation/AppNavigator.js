@@ -42,39 +42,35 @@ function MainTabNavigator() {
         },
         tabBarActiveTintColor: "#FF6B35",
         tabBarInactiveTintColor: "gray",
-        headerStyle: {
-          backgroundColor: "#FF6B35",
-        },
-        headerTintColor: "#fff",
-        headerTitleStyle: {
-          fontWeight: "bold",
-        },
       })}
     >
       <Tab.Screen
         name="Eventi"
         component={EventsMapScreen}
-        options={{ title: "Eventi" }}
+        options={{
+          title: "Eventi",
+          headerShown: false,
+        }}
       />
       <Tab.Screen
         name="Segnala"
         component={CreateReportScreen}
-        options={{ title: "Segnala" }}
+        options={{ title: "Segnala", headerShown: false }}
       />
       <Tab.Screen
         name="Bollettino"
         component={WeatherBulletinScreen}
-        options={{ title: "Bollettino" }}
+        options={{ title: "Bollettino", headerShown: false }}
       />
       <Tab.Screen
         name="Comunicazioni"
         component={CommunicationsScreen}
-        options={{ title: "Comunicazioni" }}
+        options={{ title: "Comunicazioni", headerShown: false }}
       />
       <Tab.Screen
         name="Profilo"
         component={ProfileScreen}
-        options={{ title: "Profilo" }}
+        options={{ title: "Profilo", headerShown: false }}
       />
     </Tab.Navigator>
   );
@@ -112,7 +108,7 @@ export default function AppNavigator() {
         <Stack.Screen
           name="Register"
           component={RegisterScreen}
-          options={{ title: "Registrati" }}
+          options={{ title: "Registrati", headerShown: false }}
         />
         <Stack.Screen
           name="Main"
