@@ -1,3 +1,4 @@
+//event list screen
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -7,24 +8,26 @@ import {
   StyleSheet,
   RefreshControl,
   Alert,
+  Image,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { eventsService } from "../services/api";
+import { commonStyles } from "../styles/commonStyles"; // Importa gli stili comuni
 
 export default function EventsListScreen({ navigation }) {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [showMyReports, setShowMyReports] = useState(false);
+  const [selectedType, setSelectedType] = useState("Eventi"); // Stato per gestire "Eventi" o "Segnalazioni"
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false); // Stato per la visibilità del menu a tendina
 
   useEffect(() => {
     loadEvents();
-  }, [showMyReports]);
+  }, [showMyReports, selectedType]);
 
   const loadEvents = async () => {
     setLoading(true);
     try {
-      // Simula dati Eventi per la demo
       const mockEvents = [
         {
           id: "1",
@@ -80,10 +83,10 @@ export default function EventsListScreen({ navigation }) {
         },
       ];
 
-      // Filtra per le proprie segnalazioni se necessario
-      const filteredEvents = showMyReports
-        ? mockEvents.filter((event) => event.id === "1") // Simula che solo l'evento 1 sia dell'utente
-        : mockEvents;
+      const filteredEvents =
+        selectedType === "Eventi"
+          ? mockEvents
+          : mockEvents.filter((event) => event.id === "1"); // Solo "Segnalazioni" (Le mie segnalazioni) se selezionato
 
       setEvents(filteredEvents);
     } catch (error) {
@@ -158,17 +161,6 @@ export default function EventsListScreen({ navigation }) {
     }
   };
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("it-IT", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
   const handleEventPress = (event) => {
     Alert.alert(
       event.title,
@@ -183,12 +175,18 @@ export default function EventsListScreen({ navigation }) {
   };
 
   const showEventDetails = (event) => {
-    // Naviga ai dettagli dell'evento
     console.log("Mostra dettagli evento:", event);
   };
 
-  const toggleFilter = () => {
-    setShowMyReports(!showMyReports);
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("it-IT", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
   };
 
   const renderEventitem = ({ item }) => (
@@ -221,11 +219,9 @@ export default function EventsListScreen({ navigation }) {
           </View>
         </View>
       </View>
-
       <Text style={styles.eventDescription} numberOfLines={2}>
         {item.description}
       </Text>
-
       <View style={styles.eventFooter}>
         <Text style={styles.eventDate}>{formatDate(item.createdAt)}</Text>
         <View style={styles.eventBadges}>
@@ -260,35 +256,93 @@ export default function EventsListScreen({ navigation }) {
   return (
     <View style={styles.container}>
       {/* Header */}
+      <View style={styles.header2}>
+        <Text style={commonStyles.headerTitle}>
+          Protezione Civile | Regione Calabria
+        </Text>
+        <Image
+          source={require("../components/Logo.png")}
+          style={styles.reportButtonImage}
+        />
+      </View>
       <View style={styles.header}>
+        <Text style={commonStyles.headerTitle}>ProCiv Calabria</Text>
         <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.navigate("Main", { screen: "Segnala" })}
+          activeOpacity={1}
+          style={styles.reportButton}
         >
-          <Ionicons name="arrow-back" size={24} color="#fff" />
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.filterButton} onPress={toggleFilter}>
-          <Ionicons
-            name={showMyReports ? "person" : "people"}
-            size={20}
-            color="#fff"
-          />
-          <Text style={styles.filterText}>
-            {showMyReports ? "Le mie segnalazioni" : "Eventi"}
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.mapButton}
-          onPress={() => navigation.goBack()}
-        >
-          <Ionicons name="map" size={20} color="#fff" />
-          <Text style={styles.mapButtonText}>Mappaaaa</Text>
+          <Text style={styles.reportButtonText}>Segnala</Text>
         </TouchableOpacity>
       </View>
+      <View style={styles.tabContainer}>
+        <TouchableOpacity
+          style={styles.tab}
+          onPress={() => navigation.navigate("Main", { screen: "Eventi" })}
+        >
+          <Text style={[styles.tabText]}>Mappa</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.tab}
+          onPress={() => navigation.navigate("EventsList")}
+        >
+          <Text style={(styles.tabText, styles.activeTabText)}>Lista</Text>
+        </TouchableOpacity>
+      </View>
+      {/* Dropdown personalizzato per Eventi / Le mie Segnalazioni */}
+      <View style={styles.dropdownContainer}>
+        <TouchableOpacity
+          style={styles.dropdownButton}
+          onPress={() => setIsDropdownVisible(!isDropdownVisible)}
+        >
+          <Text style={styles.dropdownTitle}>EVENTI/LE MIE SEGNALAZIONI</Text>
+          <Ionicons
+            name={isDropdownVisible ? "chevron-up" : "chevron-down"}
+            size={20}
+            color="#007AFF"
+          />
+        </TouchableOpacity>
 
-      {/* Events List */}
+        {isDropdownVisible && (
+          <View style={styles.dropdownMenu}>
+            <Text style={styles.dropdownTitle2}> Seleziona tipologia</Text>
+            <TouchableOpacity
+              onPress={() => {
+                setSelectedType("Eventi");
+                setIsDropdownVisible(false); // Chiude il menu dopo la selezione
+              }}
+              style={styles.dropdownItemContainer} // Stile per la voce del menu
+            >
+              <Text style={styles.dropdownItem}>Eventi</Text>
+              <View
+                style={[
+                  styles.circle,
+                  selectedType === "Eventi" && { backgroundColor: "blue" }, // Colore rosso se selezionato
+                ]}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setSelectedType("Segnalazioni");
+                setIsDropdownVisible(false); // Chiude il menu dopo la selezione
+              }}
+              style={styles.dropdownItemContainer} // Stile per la voce del menu
+            >
+              <Text style={styles.dropdownItem}>Segnalazioni</Text>
+              <View
+                style={[
+                  styles.circle,
+                  selectedType === "Segnalazioni" && {
+                    backgroundColor: "#FF3B30",
+                  }, // Colore rosso se selezionato
+                ]}
+              />
+            </TouchableOpacity>
+          </View>
+        )}
+      </View>
+
+      {/* Lista degli eventi */}
       <FlatList
         data={events}
         renderItem={renderEventitem}
@@ -303,9 +357,8 @@ export default function EventsListScreen({ navigation }) {
         }
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <Ionicons name="document-text-outline" size={60} color="#ccc" />
             <Text style={styles.emptyText}>
-              {showMyReports
+              {selectedType === "Segnalazioni"
                 ? "Nessuna segnalazione trovata"
                 : "Nessun evento disponibile"}
             </Text>
@@ -317,161 +370,173 @@ export default function EventsListScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f8f9fa",
+  container: { marginTop: 20, flex: 1 },
+  dropdownContainer: { paddingVertical: 15, paddingHorizontal: 20 },
+  dropdownTitle: {
+    color: "#007AFF",
+    fontSize: 18,
+    marginBottom: 10,
+    fontWeight: "bold",
   },
+  dropdownItemContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+  },
+
+  circle: {
+    width: 15,
+    height: 15,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: "blue",
+    marginLeft: 10,
+  },
+
+  dropdownTitle2: {
+    color: "#007AFF",
+    fontSize: 15,
+    marginBottom: 10,
+    fontWeight: "bold",
+  },
+  dropdownButton: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 10,
+    backgroundColor: "#f0f0f0",
+    borderRadius: 8,
+  },
+  dropdownText: { fontSize: 16, color: "#333" },
+  dropdownMenu: {
+    marginTop: 5,
+    backgroundColor: "#f0f0f0",
+    borderRadius: 8,
+    overflow: "hidden",
+  },
+  dropdownItem: {
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    fontSize: 16,
+    color: "#333",
+  },
+  listContainer: { paddingBottom: 20 },
+  eventCard: {
+    backgroundColor: "#fff",
+    marginBottom: 15,
+    padding: 15,
+    borderRadius: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  eventHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  EventiconContainer: {
+    backgroundColor: "#f0f0f0",
+    padding: 10,
+    borderRadius: 50,
+  },
+  Eventinfo: { flex: 1, marginLeft: 10 },
+  eventTitle: { fontWeight: "bold", fontSize: 16 },
+  eventLocation: { color: "#555" },
+  eventStatus: { flexDirection: "row", alignItems: "center" },
+  priorityBadge: {
+    borderRadius: 12,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    marginTop: 5,
+  },
+  priorityText: { color: "#fff", fontSize: 12 },
+  eventDescription: { marginTop: 10, color: "#555" },
+  eventFooter: {
+    marginTop: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  eventDate: { fontSize: 12, color: "#888" },
+  eventBadges: { flexDirection: "row", alignItems: "center" },
+  warningBadge: {
+    backgroundColor: "#FF3B30",
+    paddingVertical: 3,
+    paddingHorizontal: 6,
+    borderRadius: 12,
+    flexDirection: "row",
+    alignItems: "center",
+    marginRight: 5,
+  },
+  criticalBadge: {
+    backgroundColor: "#FF9500",
+    paddingVertical: 3,
+    paddingHorizontal: 6,
+    borderRadius: 12,
+    flexDirection: "row",
+    alignItems: "center",
+    marginRight: 5,
+  },
+  statusBadge: { paddingVertical: 3, paddingHorizontal: 6, borderRadius: 12 },
+  badgeText: { color: "#fff", fontSize: 10, marginLeft: 3 },
+  emptyContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  emptyText: { fontSize: 16, color: "#888" },
+  reportButton: {
+    backgroundColor: "#FF6B35",
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 5,
+    borderColor: "white",
+    borderWidth: 3,
+  },
+  reportButtonText: { color: "#fff", fontSize: 16, fontWeight: "bold" },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "#FF6B35",
-    paddingHorizontal: 15,
+    backgroundColor: "#0091D6",
+    paddingHorizontal: 20,
     paddingVertical: 10,
-    paddingTop: 50,
   },
-  backButton: {
-    padding: 5,
-  },
-  filterButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 20,
-  },
-  filterText: {
-    color: "#fff",
-    marginLeft: 5,
-    fontSize: 14,
-    fontWeight: "600",
-  },
-  mapButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 20,
-  },
-  mapButtonText: {
-    color: "#fff",
-    marginLeft: 5,
-    fontSize: 14,
-    fontWeight: "600",
-  },
-  listContainer: {
-    padding: 15,
-  },
-  eventCard: {
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    padding: 15,
-    marginBottom: 15,
-    elevation: 3,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-  },
-  eventHeader: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    marginBottom: 10,
-  },
-  EventiconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "#f8f9fa",
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 12,
-  },
-  Eventinfo: {
-    flex: 1,
-  },
-  eventTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#333",
-    marginBottom: 4,
-  },
-  eventLocation: {
-    fontSize: 14,
-    color: "#666",
-  },
-  eventStatus: {
-    alignItems: "flex-end",
-  },
-  priorityBadge: {
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
-  },
-  priorityText: {
-    fontSize: 10,
-    fontWeight: "bold",
-    color: "#fff",
-  },
-  eventDescription: {
-    fontSize: 14,
-    color: "#666",
-    lineHeight: 20,
-    marginBottom: 12,
-  },
-  eventFooter: {
+  header2: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    backgroundColor: "#0091D6",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
   },
-  eventDate: {
-    fontSize: 12,
-    color: "#999",
-  },
-  eventBadges: {
+
+  tabContainer: {
     flexDirection: "row",
-    gap: 6,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
   },
-  warningBadge: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#FF9500",
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 10,
-    gap: 2,
-  },
-  criticalBadge: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#FF3B30",
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 10,
-    gap: 2,
-  },
-  statusBadge: {
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 10,
-  },
-  badgeText: {
-    fontSize: 10,
-    fontWeight: "600",
-    color: "#fff",
-  },
-  emptyContainer: {
+
+  tab: {
     flex: 1,
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    paddingVertical: 60,
+    paddingVertical: 10,
   },
-  emptyText: {
-    fontSize: 16,
-    color: "#999",
-    marginTop: 15,
-    textAlign: "center",
+
+  tabText: {
+    marginLeft: 8,
+    color: "#666",
   },
+  activeTabText: {
+    color: "blue",
+    fontWeight: "bold",
+  },
+
+  reportButtonImage: { width: 50, height: 50, resizeMode: "contain" },
 });

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -12,24 +12,24 @@ import {
   Platform,
   ScrollView,
   Image,
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import * as Location from 'expo-location';
-import * as ImagePicker from 'expo-image-picker';
-import MapView, { Marker } from 'react-native-maps';
-import { eventsService } from '../services/api';
-import { authUtils } from '../utils/auth';
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import * as Location from "expo-location";
+import * as ImagePicker from "expo-image-picker";
+import MapView, { Marker } from "react-native-maps";
+import { eventsService } from "../services/api";
+import { authUtils } from "../utils/auth";
 
 export default function CreateReportScreen({ navigation }) {
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    type: 'other',
+    title: "",
+    description: "",
+    type: "other",
     hasInjured: false,
     hasVictims: false,
     hasDanger: false,
   });
-  
+
   const [location, setLocation] = useState(null);
   const [loading, setLoading] = useState(false);
   const [images, setImages] = useState([]);
@@ -44,14 +44,14 @@ export default function CreateReportScreen({ navigation }) {
   const checkAuthStatus = async () => {
     const authenticated = await authUtils.isAuthenticated();
     setIsAuthenticated(authenticated);
-    
+
     if (!authenticated) {
       Alert.alert(
-        'Accesso richiesto',
-        'Per creare una segnalazione devi effettuare il login.',
+        "Accesso richiesto",
+        "Per creare una segnalazione devi effettuare il login.",
         [
-          { text: 'Annulla', style: 'cancel' },
-          { text: 'Vai al Login', onPress: () => navigation.navigate('Login') },
+          { text: "Annulla", style: "cancel" },
+          { text: "Vai al Login", onPress: () => navigation.navigate("Login") },
         ]
       );
     }
@@ -60,11 +60,16 @@ export default function CreateReportScreen({ navigation }) {
   const requestLocationPermission = async () => {
     try {
       const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status === 'granted') {
+      if (status === "granted") {
         const currentLocation = await Location.getCurrentPositionAsync({});
-        
+
         // Verifica se l'utente è in Calabria
-        if (isInCalabria(currentLocation.coords.latitude, currentLocation.coords.longitude)) {
+        if (
+          isInCalabria(
+            currentLocation.coords.latitude,
+            currentLocation.coords.longitude
+          )
+        ) {
           setLocation({
             latitude: currentLocation.coords.latitude,
             longitude: currentLocation.coords.longitude,
@@ -73,32 +78,34 @@ export default function CreateReportScreen({ navigation }) {
           });
         } else {
           Alert.alert(
-            'Posizione non valida',
-            'Le segnalazioni possono essere create solo dalla Regione Calabria.'
+            "Posizione non valida",
+            "Le segnalazioni possono essere create solo dalla Regione Calabria."
           );
         }
       } else {
         Alert.alert(
-          'Geolocalizzazione richiesta',
-          'Per creare una segnalazione è necessario attivare la geolocalizzazione.'
+          "Geolocalizzazione richiesta",
+          "Per creare una segnalazione è necessario attivare la geolocalizzazione."
         );
       }
     } catch (error) {
-      console.error('Errore geolocalizzazione:', error);
-      Alert.alert('Errore', 'Impossibile ottenere la posizione corrente');
+      console.error("Errore geolocalizzazione:", error);
+      Alert.alert("Errore", "Impossibile ottenere la posizione corrente");
     }
   };
 
   const isInCalabria = (latitude, longitude) => {
     // Coordinate approssimative della Calabria
     return (
-      latitude >= 37.9 && latitude <= 40.2 &&
-      longitude >= 15.6 && longitude <= 17.2
+      latitude >= 37.9 &&
+      latitude <= 40.2 &&
+      longitude >= 15.6 &&
+      longitude <= 17.2
     );
   };
 
   const updateFormData = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const pickImage = async () => {
@@ -110,7 +117,7 @@ export default function CreateReportScreen({ navigation }) {
     });
 
     if (!result.canceled) {
-      setImages(prev => [...prev, result.assets[0]]);
+      setImages((prev) => [...prev, result.assets[0]]);
     }
   };
 
@@ -122,32 +129,41 @@ export default function CreateReportScreen({ navigation }) {
     });
 
     if (!result.canceled) {
-      setImages(prev => [...prev, result.assets[0]]);
+      setImages((prev) => [...prev, result.assets[0]]);
     }
   };
 
   const removeImage = (index) => {
-    setImages(prev => prev.filter((_, i) => i !== index));
+    setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async () => {
     if (!isAuthenticated) {
-      Alert.alert('Errore', 'Devi effettuare il login per creare una segnalazione');
+      Alert.alert(
+        "Errore",
+        "Devi effettuare il login per creare una segnalazione"
+      );
       return;
     }
 
     if (!phoneVerified) {
-      Alert.alert('Errore', 'Devi verificare il numero di telefono per creare segnalazioni');
+      Alert.alert(
+        "Errore",
+        "Devi verificare il numero di telefono per creare segnalazioni"
+      );
       return;
     }
 
     if (!location) {
-      Alert.alert('Errore', 'Posizione non disponibile. Attiva la geolocalizzazione.');
+      Alert.alert(
+        "Errore",
+        "Posizione non disponibile. Attiva la geolocalizzazione."
+      );
       return;
     }
 
     if (!formData.title.trim() || !formData.description.trim()) {
-      Alert.alert('Errore', 'Compila tutti i campi obbligatori');
+      Alert.alert("Errore", "Compila tutti i campi obbligatori");
       return;
     }
 
@@ -162,24 +178,24 @@ export default function CreateReportScreen({ navigation }) {
         hasInjured: formData.hasInjured,
         hasVictims: formData.hasVictims,
         hasDanger: formData.hasDanger,
-        images: images.map(img => img.uri),
+        images: images.map((img) => img.uri),
         createdAt: new Date().toISOString(),
       };
 
       await eventsService.createEvent(reportData);
-      
+
       Alert.alert(
-        'Segnalazione inviata',
-        'La tua segnalazione è stata inviata con successo e sarà verificata dal personale competente.',
+        "Segnalazione inviata",
+        "La tua segnalazione è stata inviata con successo e sarà verificata dal personale competente.",
         [
           {
-            text: 'OK',
+            text: "OK",
             onPress: () => {
               // Reset form
               setFormData({
-                title: '',
-                description: '',
-                type: 'other',
+                title: "",
+                description: "",
+                type: "other",
                 hasInjured: false,
                 hasVictims: false,
                 hasDanger: false,
@@ -191,20 +207,23 @@ export default function CreateReportScreen({ navigation }) {
         ]
       );
     } catch (error) {
-      console.error('Errore invio segnalazione:', error);
-      Alert.alert('Errore', 'Impossibile inviare la segnalazione. Riprova più tardi.');
+      console.error("Errore invio segnalazione:", error);
+      Alert.alert(
+        "Errore",
+        "Impossibile inviare la segnalazione. Riprova più tardi."
+      );
     } finally {
       setLoading(false);
     }
   };
 
   const eventTypes = [
-    { value: 'flood', label: 'Allagamento', icon: 'water' },
-    { value: 'landslide', label: 'Frana', icon: 'triangle' },
-    { value: 'fire', label: 'Incendio', icon: 'flame' },
-    { value: 'obstacle', label: 'Ostacolo stradale', icon: 'warning' },
-    { value: 'accident', label: 'Incidente', icon: 'car-crash' },
-    { value: 'other', label: 'Altro', icon: 'alert-circle' },
+    { value: "flood", label: "Allagamento", icon: "water" },
+    { value: "landslide", label: "Frana", icon: "triangle" },
+    { value: "fire", label: "Incendio", icon: "flame" },
+    { value: "obstacle", label: "Ostacolo stradale", icon: "warning" },
+    { value: "accident", label: "Incidente", icon: "car-crash" },
+    { value: "other", label: "Altro", icon: "alert-circle" },
   ];
 
   if (!isAuthenticated) {
@@ -218,7 +237,7 @@ export default function CreateReportScreen({ navigation }) {
           </Text>
           <TouchableOpacity
             style={styles.loginButton}
-            onPress={() => navigation.navigate('Login')}
+            onPress={() => navigation.navigate("Login")}
           >
             <Text style={styles.loginButtonText}>Vai al Login</Text>
           </TouchableOpacity>
@@ -230,7 +249,7 @@ export default function CreateReportScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.keyboardView}
       >
         <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -251,7 +270,7 @@ export default function CreateReportScreen({ navigation }) {
               <TextInput
                 style={styles.input}
                 value={formData.title}
-                onChangeText={(value) => updateFormData('title', value)}
+                onChangeText={(value) => updateFormData("title", value)}
                 placeholder="Es: Allagamento strada provinciale"
                 maxLength={100}
               />
@@ -266,19 +285,21 @@ export default function CreateReportScreen({ navigation }) {
                     key={type.value}
                     style={[
                       styles.typeButton,
-                      formData.type === type.value && styles.typeButtonSelected
+                      formData.type === type.value && styles.typeButtonSelected,
                     ]}
-                    onPress={() => updateFormData('type', type.value)}
+                    onPress={() => updateFormData("type", type.value)}
                   >
                     <Ionicons
                       name={type.icon}
                       size={20}
-                      color={formData.type === type.value ? '#fff' : '#666'}
+                      color={formData.type === type.value ? "#fff" : "#666"}
                     />
-                    <Text style={[
-                      styles.typeText,
-                      formData.type === type.value && styles.typeTextSelected
-                    ]}>
+                    <Text
+                      style={[
+                        styles.typeText,
+                        formData.type === type.value && styles.typeTextSelected,
+                      ]}
+                    >
                       {type.label}
                     </Text>
                   </TouchableOpacity>
@@ -292,7 +313,7 @@ export default function CreateReportScreen({ navigation }) {
               <TextInput
                 style={styles.textArea}
                 value={formData.description}
-                onChangeText={(value) => updateFormData('description', value)}
+                onChangeText={(value) => updateFormData("description", value)}
                 placeholder="Descrivi la situazione nel dettaglio..."
                 multiline
                 numberOfLines={4}
@@ -303,13 +324,13 @@ export default function CreateReportScreen({ navigation }) {
             {/* Situazione di pericolo */}
             <View style={styles.checkboxContainer}>
               <Text style={styles.label}>Situazione di pericolo</Text>
-              
+
               <TouchableOpacity
                 style={styles.checkbox}
-                onPress={() => updateFormData('hasDanger', !formData.hasDanger)}
+                onPress={() => updateFormData("hasDanger", !formData.hasDanger)}
               >
                 <Ionicons
-                  name={formData.hasDanger ? 'checkbox' : 'square-outline'}
+                  name={formData.hasDanger ? "checkbox" : "square-outline"}
                   size={24}
                   color="#FF6B35"
                 />
@@ -318,10 +339,12 @@ export default function CreateReportScreen({ navigation }) {
 
               <TouchableOpacity
                 style={styles.checkbox}
-                onPress={() => updateFormData('hasInjured', !formData.hasInjured)}
+                onPress={() =>
+                  updateFormData("hasInjured", !formData.hasInjured)
+                }
               >
                 <Ionicons
-                  name={formData.hasInjured ? 'checkbox' : 'square-outline'}
+                  name={formData.hasInjured ? "checkbox" : "square-outline"}
                   size={24}
                   color="#FF6B35"
                 />
@@ -330,10 +353,12 @@ export default function CreateReportScreen({ navigation }) {
 
               <TouchableOpacity
                 style={styles.checkbox}
-                onPress={() => updateFormData('hasVictims', !formData.hasVictims)}
+                onPress={() =>
+                  updateFormData("hasVictims", !formData.hasVictims)
+                }
               >
                 <Ionicons
-                  name={formData.hasVictims ? 'checkbox' : 'square-outline'}
+                  name={formData.hasVictims ? "checkbox" : "square-outline"}
                   size={24}
                   color="#FF6B35"
                 />
@@ -362,16 +387,22 @@ export default function CreateReportScreen({ navigation }) {
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Foto (opzionale)</Text>
               <View style={styles.imageContainer}>
-                <TouchableOpacity style={styles.imageButton} onPress={takePhoto}>
+                <TouchableOpacity
+                  style={styles.imageButton}
+                  onPress={takePhoto}
+                >
                   <Ionicons name="camera" size={24} color="#666" />
                   <Text style={styles.imageButtonText}>Scatta foto</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.imageButton} onPress={pickImage}>
+                <TouchableOpacity
+                  style={styles.imageButton}
+                  onPress={pickImage}
+                >
                   <Ionicons name="image" size={24} color="#666" />
                   <Text style={styles.imageButtonText}>Galleria</Text>
                 </TouchableOpacity>
               </View>
-              
+
               {images.length > 0 && (
                 <View style={styles.imagePreview}>
                   {images.map((image, index) => (
@@ -381,7 +412,11 @@ export default function CreateReportScreen({ navigation }) {
                         style={styles.removeButton}
                         onPress={() => removeImage(index)}
                       >
-                        <Ionicons name="close-circle" size={24} color="#FF3B30" />
+                        <Ionicons
+                          name="close-circle"
+                          size={24}
+                          color="#FF3B30"
+                        />
                       </TouchableOpacity>
                     </View>
                   ))}
@@ -391,7 +426,10 @@ export default function CreateReportScreen({ navigation }) {
 
             {/* Submit Button */}
             <TouchableOpacity
-              style={[styles.submitButton, loading && styles.submitButtonDisabled]}
+              style={[
+                styles.submitButton,
+                loading && styles.submitButtonDisabled,
+              ]}
               onPress={handleSubmit}
               disabled={loading}
             >
@@ -400,7 +438,9 @@ export default function CreateReportScreen({ navigation }) {
               ) : (
                 <>
                   <Ionicons name="send" size={20} color="#fff" />
-                  <Text style={styles.submitButtonText}>Invia Segnalazione</Text>
+                  <Text style={styles.submitButtonText}>
+                    Invia Segnalazione
+                  </Text>
                 </>
               )}
             </TouchableOpacity>
@@ -414,7 +454,7 @@ export default function CreateReportScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f9fa',
+    backgroundColor: "#f8f9fa",
   },
   keyboardView: {
     flex: 1,
@@ -425,20 +465,20 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   header: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 30,
   },
   title: {
     fontSize: 28,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: "bold",
+    color: "#333",
     marginTop: 15,
     marginBottom: 10,
   },
   subtitle: {
     fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
+    color: "#666",
+    textAlign: "center",
   },
   form: {
     flex: 1,
@@ -448,110 +488,110 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
+    fontWeight: "600",
+    color: "#333",
     marginBottom: 8,
   },
   input: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
     paddingHorizontal: 15,
     paddingVertical: 12,
     fontSize: 16,
-    color: '#333',
+    color: "#333",
   },
   textArea: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
     paddingHorizontal: 15,
     paddingVertical: 12,
     fontSize: 16,
-    color: '#333',
+    color: "#333",
     height: 100,
-    textAlignVertical: 'top',
+    textAlignVertical: "top",
   },
   typeContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: 10,
   },
   typeButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#fff',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#fff",
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
     paddingHorizontal: 12,
     paddingVertical: 8,
     gap: 6,
   },
   typeButtonSelected: {
-    backgroundColor: '#FF6B35',
-    borderColor: '#FF6B35',
+    backgroundColor: "#FF6B35",
+    borderColor: "#FF6B35",
   },
   typeText: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
   },
   typeTextSelected: {
-    color: '#fff',
+    color: "#fff",
   },
   checkboxContainer: {
     marginBottom: 20,
   },
   checkbox: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 10,
     gap: 10,
   },
   checkboxText: {
     fontSize: 16,
-    color: '#333',
+    color: "#333",
   },
   mapContainer: {
     height: 200,
     borderRadius: 12,
-    overflow: 'hidden',
+    overflow: "hidden",
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
   },
   map: {
     flex: 1,
   },
   imageContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 10,
     marginBottom: 10,
   },
   imageButton: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#fff',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#fff",
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
     paddingVertical: 12,
     gap: 8,
   },
   imageButtonText: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
   },
   imagePreview: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: 10,
   },
   imageItem: {
-    position: 'relative',
+    position: "relative",
   },
   image: {
     width: 80,
@@ -559,62 +599,61 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   removeButton: {
-    position: 'absolute',
+    position: "absolute",
     top: -8,
     right: -8,
   },
   submitButton: {
-    backgroundColor: '#FF6B35',
+    backgroundColor: "#FF6B35",
     paddingVertical: 15,
     borderRadius: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     marginTop: 20,
     elevation: 3,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
   },
   submitButtonDisabled: {
-    backgroundColor: '#ccc',
+    backgroundColor: "#ccc",
   },
   submitButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginLeft: 8,
   },
   errorContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: 40,
   },
   errorTitle: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: "bold",
+    color: "#333",
     marginTop: 20,
     marginBottom: 10,
   },
   errorText: {
     fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
+    color: "#666",
+    textAlign: "center",
     marginBottom: 30,
   },
   loginButton: {
-    backgroundColor: '#FF6B35',
+    backgroundColor: "#FF6B35",
     paddingHorizontal: 30,
     paddingVertical: 12,
     borderRadius: 25,
   },
   loginButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
-

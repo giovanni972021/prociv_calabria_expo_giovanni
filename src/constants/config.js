@@ -7,8 +7,8 @@ export const CONFIG = {
   ENDPOINTS: {
     LOGIN: "/api/users/_session",
     REGISTER: "/registra",
-    VERIFY_EMAIL: "/api/email/verify",
-    VERIFY_PHONE: "/api/cellular/verify",
+    VERIFY_EMAIL: "/api/users/contacts-verify/email/otp/send",
+    VERIFY_PHONE: "/api/users/contacts-verify/cellular/verify",
     EVENTS_FIND: "/api/events/_find",
     EVENTS_CREATE: "/api/events",
     EVENTS_VIEW: "/api/events",

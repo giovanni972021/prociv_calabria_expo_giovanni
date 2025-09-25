@@ -1,3 +1,4 @@
+//codice
 import React from "react";
 import {
   View,
@@ -45,7 +46,7 @@ export default function HomeScreen({ navigation }) {
             <TouchableOpacity onPress={handleRegister} activeOpacity={1}>
               <Text style={styles.linkText}>
                 Non hai delle credenziali?
-                <Text style={styles.registerLink}>Registrati.</Text>
+                <Text style={styles.registerLink}> Registrati.</Text>
               </Text>
             </TouchableOpacity>
             <View style={styles.horizontalLine}></View>

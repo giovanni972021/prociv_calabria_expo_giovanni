@@ -112,13 +112,13 @@ export default function AppNavigator() {
         />
         <Stack.Screen
           name="Main"
-          component={MainTabNavigator}
+          component={MainTabNavigator} // Questo è il Tab Navigator che contiene "Eventi"
           options={{ headerShown: false }}
         />
         <Stack.Screen
           name="EventsList"
           component={EventsListScreen}
-          options={{ title: "Lista Eventi" }}
+          options={{ title: "Lista Eventi", headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>
