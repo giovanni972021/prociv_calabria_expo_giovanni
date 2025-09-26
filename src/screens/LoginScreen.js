@@ -1,3 +1,5 @@
+//estetica uguale a originale, pulsante continua e pulsante annulla ok
+//ricomincia da qui sistemare pulsante hai dimenticato le credenziali
 import React, { useState } from "react";
 import {
   View,
@@ -15,25 +17,20 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { authService } from "../services/api";
 import { authUtils } from "../utils/auth";
-
 const LoginScreen = ({ navigation }) => {
   const [fiscalCode, setFiscalCode] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [isPressed, setIsPressed] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-
   const handleLogin = async () => {
     if (!fiscalCode.trim() || !password.trim()) {
       Alert.alert("Errore", "Inserisci codice fiscale e password");
       return;
     }
-
     setLoading(true);
-
     try {
       const response = await authService.login(fiscalCode.trim(), password);
-
       if (response && response.ok) {
         await authUtils.saveAuthSession(response);
         await authUtils.saveUserData({
@@ -43,7 +40,6 @@ const LoginScreen = ({ navigation }) => {
           subProfiles: response.subProfiles,
           registrationEmail: response.registrationEmail,
         });
-
         Alert.alert("Accesso effettuato", "Benvenuto nell'applicazione!", [
           {
             text: "Continua",
@@ -58,7 +54,6 @@ const LoginScreen = ({ navigation }) => {
       }
     } catch (error) {
       console.error("🔐 Login error:", error);
-
       if (fiscalCode.trim() === "LLNRBL80A01G273E" && password === "89411809") {
         const mockResponse = {
           ok: true,
@@ -68,7 +63,6 @@ const LoginScreen = ({ navigation }) => {
           subProfiles: ["SubProfile:User"],
           registrationEmail: "demo@protezionecivilecalabria.it",
         };
-
         await authUtils.saveAuthSession(mockResponse);
         await authUtils.saveUserData(mockResponse);
         navigation.replace("Main");
@@ -78,7 +72,6 @@ const LoginScreen = ({ navigation }) => {
           error.message ||
           "Errore sconosciuto";
         const statusCode = error.response?.status || "N/A";
-
         Alert.alert(
           "Errore di connessione",
           `Impossibile effettuare il login.\n\nDettagli: ${errorMessage}\nCodice: ${statusCode}\n\nVerifica le credenziali e la connessione internet.`
@@ -88,12 +81,10 @@ const LoginScreen = ({ navigation }) => {
       setLoading(false);
     }
   };
-
   const fillTestCredentials = () => {
     setFiscalCode("LLNRBL80A01G273E");
     setPassword("89411809");
   };
-
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
@@ -105,7 +96,6 @@ const LoginScreen = ({ navigation }) => {
             <Text style={styles.subtitle}>Accesso</Text>
             <Text style={styles.title}>Entra con le tue credenziali</Text>
           </View>
-
           <View style={styles.form}>
             <InputField
               label="Nome Utente"
@@ -113,12 +103,11 @@ const LoginScreen = ({ navigation }) => {
               onChange={setFiscalCode}
               maxLength={16}
             />
-
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>Password</Text>
+              <Text style={[styles.label, styles.commonText]}>Password</Text>
               <View style={styles.passwordContainer}>
                 <TextInput
-                  style={styles.passwordInput}
+                  style={[styles.passwordInput, styles.commonInput]}
                   value={password}
                   onChangeText={setPassword}
                   secureTextEntry={!isPasswordVisible}
@@ -138,12 +127,13 @@ const LoginScreen = ({ navigation }) => {
                 </TouchableOpacity>
               </View>
             </View>
-
             <TouchableOpacity onPress={fillTestCredentials} />
-
             <View style={styles.forgotContainer}>
               <TouchableOpacity
-                onPress={() => Alert.alert("Funzione non implementata")}
+                onPress={() =>
+                  //ricomincia da qui anziche rimandare a pagina eventi rimanda a pagina forgot password
+                  navigation.navigate("ForgotPasswordScreen")
+                }
               >
                 <Text style={styles.forgotText}>
                   Hai dimenticato le{" "}
@@ -153,14 +143,12 @@ const LoginScreen = ({ navigation }) => {
             </View>
           </View>
         </ScrollView>
-
         <View style={styles.bottomContainer}>
           <Button onPress={handleLogin} loading={loading} text="Continua" />
         </View>
-
         <View style={styles.bottomContainer}>
           <Button
-            onPress={() => navigation.goBack()}
+            onPress={() => navigation.navigate("Home")}
             loading={loading}
             text="Annulla"
             isPressed={isPressed}
@@ -172,7 +160,6 @@ const LoginScreen = ({ navigation }) => {
     </SafeAreaView>
   );
 };
-
 const InputField = ({
   label,
   value,
@@ -184,7 +171,7 @@ const InputField = ({
   <View style={styles.inputContainer}>
     <Text style={styles.label}>{label}</Text>
     <TextInput
-      style={styles.input}
+      style={[styles.input, styles.commonInput]}
       value={value}
       onChangeText={onChange}
       placeholder={placeholder}
@@ -195,7 +182,6 @@ const InputField = ({
     />
   </View>
 );
-
 const Button = ({
   onPress,
   loading,
@@ -229,11 +215,19 @@ const Button = ({
     )}
   </TouchableOpacity>
 );
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f8f9fa",
+  },
+  commonText: {
+    fontSize: 16,
+    color: "#333",
+  },
+  commonInput: {
+    fontSize: 16,
+    color: "#333",
+    borderBottomColor: "#333",
   },
   keyboardView: {
     flex: 1,
@@ -268,32 +262,23 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   label: {
-    fontSize: 16,
     fontWeight: "600",
-    color: "#333",
   },
   input: {
     height: 50,
-    fontSize: 16,
-    color: "#333",
     borderBottomWidth: 2,
     paddingBottom: 10,
-    borderBottomColor: "#333",
     paddingHorizontal: 0,
+  },
+  passwordInput: {
+    flex: 1,
+    paddingVertical: 0,
   },
   passwordContainer: {
     flexDirection: "row",
     alignItems: "center",
     borderBottomWidth: 2,
-    borderBottomColor: "#333",
     height: 55,
-    paddingBottom: 10,
-  },
-  passwordInput: {
-    flex: 1,
-    fontSize: 16,
-    color: "#333",
-    paddingVertical: 0,
   },
   eyeIconContainer: {
     paddingBottom: 4,
@@ -341,13 +326,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   forgotText: {
+    ...this?.commonText,
     fontSize: 16,
   },
   forgotText2: {
-    fontSize: 16,
+    ...this?.commonText,
     color: "#0037ceff",
     fontWeight: "600",
   },
 });
-
 export default LoginScreen;

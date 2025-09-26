@@ -3,17 +3,17 @@ import {
   View,
   Text,
   StyleSheet,
-  Image,
   TouchableOpacity,
   Alert,
   ActivityIndicator,
-  SafeAreaView, // Importa SafeAreaView
+  SafeAreaView,
 } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import * as Location from "expo-location";
 import { eventsService } from "../services/api";
 import { CONFIG } from "../constants/config";
-import { commonStyles } from "../styles/commonStyles"; // Importa gli stili comuni
+import { commonStyles } from "../styles/commonStyles";
+import HeaderSection from "../components/HeaderSection"; // ✅ IMPORTA HEADER
 
 export default function EventsMapScreen({ navigation }) {
   const [region, setRegion] = useState(CONFIG.MAP_CONFIG.INITIAL_REGION);
@@ -131,50 +131,10 @@ export default function EventsMapScreen({ navigation }) {
     console.log("Mostra dettagli evento:", event);
   };
 
-  const handleSegnala = () => {
-    navigation.navigate("Segnala");
-  };
-
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header Section */}
-
-      <View style={styles.header2}>
-        <Text style={commonStyles.headerTitle}>
-          Protezione Civile | Regione Calabria
-        </Text>
-        <Image
-          source={require("../components/Logo.png")}
-          style={styles.reportButtonImage}
-        />
-      </View>
-
-      <View style={styles.header}>
-        <Text style={commonStyles.headerTitle}>ProCiv Calabria</Text>
-        <TouchableOpacity
-          onPress={handleSegnala}
-          activeOpacity={1}
-          style={styles.reportButton}
-        >
-          <Text style={styles.reportButtonText}>Segnala</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.tabContainer}>
-        <TouchableOpacity
-          style={styles.tab}
-          onPress={() => navigation.navigate("Eventi")}
-        >
-          <Text style={[styles.tabText, styles.activeTabText]}>Mappa</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.tab}
-          onPress={() => navigation.navigate("EventsList")}
-        >
-          <Text style={styles.tabText}>Lista</Text>
-        </TouchableOpacity>
-      </View>
+      {/* ✅ HEADER UNIFICATO */}
+      <HeaderSection activeTab="Mappa" />
 
       <MapView
         provider={PROVIDER_GOOGLE}
@@ -213,63 +173,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 20,
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: "#0091D6",
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-  },
-  header2: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: "#0091D6",
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-  },
-
-  reportButton: {
-    backgroundColor: "#FF6B35",
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 5,
-    borderColor: "white",
-    borderWidth: 3,
-  },
-  reportButtonText: {
-    color: "#FFFF",
-    fontSize: 14,
-  },
-
-  reportButtonImage: {
-    width: 50, // Imposta la larghezza dell'immagine
-    height: 50, // Imposta l'altezza dell'immagine
-    resizeMode: "contain", // Aggiusta l'immagine per non deformarla
-  },
-
-  tabContainer: {
-    flexDirection: "row",
-    borderBottomWidth: 1,
-    borderBottomColor: "#ddd",
-  },
-
-  tab: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    paddingVertical: 10,
-  },
-  tabText: {
-    marginLeft: 8,
-    color: "#666",
-  },
-  activeTabText: {
-    color: "blue",
-    fontWeight: "bold",
   },
   map: {
     flex: 1,

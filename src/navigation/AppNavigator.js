@@ -14,6 +14,7 @@ import CreateReportScreen from "../screens/CreateReportScreen";
 import WeatherBulletinScreen from "../screens/WeatherBulletinScreen";
 import CommunicationsScreen from "../screens/CommunicationsScreen";
 import ProfileScreen from "../screens/ProfileScreen";
+import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -53,11 +54,6 @@ function MainTabNavigator() {
         }}
       />
       <Tab.Screen
-        name="Segnala"
-        component={CreateReportScreen}
-        options={{ title: "Segnala", headerShown: false }}
-      />
-      <Tab.Screen
         name="Bollettino"
         component={WeatherBulletinScreen}
         options={{ title: "Bollettino", headerShown: false }}
@@ -93,6 +89,14 @@ export default function AppNavigator() {
         }}
       >
         <Stack.Screen
+          name="CreateReportScreen"
+          component={CreateReportScreen}
+          options={{
+            title: "CreateReportScreen",
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
           name="Home"
           component={HomeScreen}
           options={{
@@ -100,6 +104,13 @@ export default function AppNavigator() {
             headerShown: false,
           }}
         />
+
+        <Stack.Screen
+          name="ForgotPasswordScreen"
+          component={ForgotPasswordScreen}
+          options={{ title: "...", headerShown: false }}
+        />
+
         <Stack.Screen
           name="Login"
           component={LoginScreen}

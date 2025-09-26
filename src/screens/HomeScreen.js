@@ -1,5 +1,4 @@
-//codice
-import React from "react";
+//tutto ok sia estetica sia funzionamento bottoni
 import {
   View,
   Text,
@@ -10,23 +9,13 @@ import {
 } from "react-native";
 
 export default function HomeScreen({ navigation }) {
-  const handleLogin = () => {
-    navigation.navigate("Login");
-  };
-  const handleRegister = () => {
-    navigation.navigate("Register");
-  };
-  const handleAnonymousAccess = () => {
-    navigation.navigate("Main");
-  };
-
   return (
     <>
       <StatusBar backgroundColor="#2563EB" barStyle="light-content" />
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.title2}>Accesso</Text>
-          <Text style={styles.title}>
+          <Text style={[styles.titleCommon, styles.title2]}>Accesso</Text>
+          <Text style={[styles.titleCommon, styles.title]}>
             Accedi ai servizi di{"\n"}ProCiv Calabria
           </Text>
           <Text style={styles.subtitle}>
@@ -34,31 +23,29 @@ export default function HomeScreen({ navigation }) {
           </Text>
         </View>
         <View style={styles.content}>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={styles.primaryButton}
-              onPress={handleLogin}
-            >
-              <Text style={styles.primaryButtonText}>
-                Entra con le tue credenziali
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={handleRegister} activeOpacity={1}>
-              <Text style={styles.linkText}>
-                Non hai delle credenziali?
-                <Text style={styles.registerLink}> Registrati.</Text>
-              </Text>
-            </TouchableOpacity>
-            <View style={styles.horizontalLine}></View>
-            <TouchableOpacity
-              style={styles.secondaryButton}
-              onPress={handleAnonymousAccess}
-            >
-              <Text style={styles.secondaryButtonText}>
-                Entra in modalità anonima
-              </Text>
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity
+            style={[styles.primaryButton, styles.button]}
+            onPress={() => navigation.navigate("Login")}
+          >
+            <Text style={styles.primaryButtonText}>
+              Entra con le tue credenziali
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+            <Text style={[styles.linkText, styles.titleCommon]}>
+              Non hai delle credenziali?
+              <Text style={styles.registerLink}> Registrati.</Text>
+            </Text>
+          </TouchableOpacity>
+          <View style={styles.horizontalLine}></View>
+          <TouchableOpacity
+            style={[styles.secondaryButton, styles.button]}
+            onPress={() => navigation.navigate("Main")}
+          >
+            <Text style={styles.primaryButtonText}>
+              Entra in modalità anonima
+            </Text>
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
     </>
@@ -72,22 +59,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 20,
   },
-  header: {
-    marginBottom: 30,
+  header: { marginBottom: 30 },
+  titleCommon: {
+    color: "#1E3A8A",
+    fontWeight: "bold",
   },
   title: {
     fontSize: 34,
-    fontWeight: "bold",
-    color: "#1E3A8A",
     textAlign: "left",
   },
   title2: {
     fontSize: 20,
-    fontWeight: "bold",
-    color: "#1E3A8A",
     textAlign: "center",
     marginVertical: 20,
-    alignSelf: "stretch",
   },
   subtitle: {
     fontSize: 16,
@@ -97,16 +81,9 @@ const styles = StyleSheet.create({
   },
   primaryButton: {
     backgroundColor: "#2563EB",
-    paddingVertical: 15,
-    borderRadius: 8,
-    alignItems: "center",
     marginBottom: 15,
   },
-  primaryButtonText: {
-    color: "#FFFFFF",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
+  primaryButtonText: { color: "#FFFFFF", fontSize: 16, fontWeight: "bold" },
   linkText: {
     fontSize: 16,
     color: "#6B7280",
@@ -124,15 +101,13 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     marginBottom: 20,
   },
-  secondaryButton: {
-    backgroundColor: "#6B7280",
+  button: {
     paddingVertical: 15,
     borderRadius: 8,
     alignItems: "center",
   },
-  secondaryButtonText: {
-    color: "#FFFFFF",
-    fontSize: 16,
-    fontWeight: "bold",
+  secondaryButton: {
+    backgroundColor: "#6B7280",
   },
 });
+//tutto ok sia estetica sia funzionamento bottoni

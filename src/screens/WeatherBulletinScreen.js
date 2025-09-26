@@ -25,7 +25,7 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
+      <View style={commonStyles.header}>
         <Text style={commonStyles.headerTitle}>
           Protezione Civile | Regione Calabria
         </Text>
@@ -61,14 +61,7 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#f8f9fa", marginTop: 20 },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: "#0091D6",
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-  },
+
   reportButtonImage: { width: 50, height: 50, resizeMode: "contain" },
   headerTitle: { ...commonHeaderTitleStyle, fontSize: 16 },
   meteoContainer: { padding: 20, borderRadius: 10, marginTop: -15 },

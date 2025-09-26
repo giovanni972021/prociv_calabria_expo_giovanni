@@ -11,6 +11,14 @@ export const commonStyles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 10,
   },
+  tab: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 10,
+  },
+
   reportButtonImage: { width: 50, height: 50, resizeMode: "contain" },
   headerTitle: { color: "white", fontSize: 16 },
 });

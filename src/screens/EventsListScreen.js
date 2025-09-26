@@ -1,4 +1,4 @@
-//event list screen
+// screens/EventsListScreen.js
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -11,19 +11,19 @@ import {
   Image,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { commonStyles } from "../styles/commonStyles"; // Importa gli stili comuni
+import { commonStyles } from "../styles/commonStyles";
+import HeaderSection from "../components/HeaderSection"; // ✅ IMPORT HEADER
 
 export default function EventsListScreen({ navigation }) {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  const [showMyReports, setShowMyReports] = useState(false);
-  const [selectedType, setSelectedType] = useState("Eventi"); // Stato per gestire "Eventi" o "Segnalazioni"
-  const [isDropdownVisible, setIsDropdownVisible] = useState(false); // Stato per la visibilità del menu a tendina
+  const [selectedType, setSelectedType] = useState("Eventi");
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
   useEffect(() => {
     loadEvents();
-  }, [showMyReports, selectedType]);
+  }, [selectedType]);
 
   const loadEvents = async () => {
     setLoading(true);
@@ -55,42 +55,15 @@ export default function EventsListScreen({ navigation }) {
           hasInjured: true,
           hasVictims: false,
         },
-        {
-          id: "3",
-          title: "Incendio Boschivo",
-          description:
-            "Principio di incendio in zona boschiva. Fumo visibile dalla strada statale.",
-          type: "fire",
-          status: "open",
-          location: "Reggio Calabria, Aspromonte",
-          createdAt: "2024-09-17T06:45:00Z",
-          priority: "high",
-          hasInjured: false,
-          hasVictims: false,
-        },
-        {
-          id: "4",
-          title: "Albero Caduto",
-          description:
-            "Albero caduto sulla carreggiata a causa del vento forte.",
-          type: "obstacle",
-          status: "resolved",
-          location: "Crotone, Via Roma",
-          createdAt: "2024-09-16T18:20:00Z",
-          priority: "medium",
-          hasInjured: false,
-          hasVictims: false,
-        },
       ];
 
       const filteredEvents =
         selectedType === "Eventi"
           ? mockEvents
-          : mockEvents.filter((event) => event.id === "1"); // Solo "Segnalazioni" (Le mie segnalazioni) se selezionato
+          : mockEvents.filter((event) => event.id === "1");
 
       setEvents(filteredEvents);
     } catch (error) {
-      console.error("Errore caricamento Eventi:", error);
       Alert.alert("Errore", "Impossibile caricare gli Eventi");
     } finally {
       setLoading(false);
@@ -101,6 +74,34 @@ export default function EventsListScreen({ navigation }) {
   const onRefresh = () => {
     setRefreshing(true);
     loadEvents();
+  };
+
+  const handleEventPress = (event) => {
+    Alert.alert(
+      event.title,
+      `${event.description}\n\nLocalità: ${event.location}\nData: ${formatDate(
+        event.createdAt
+      )}`,
+      [
+        { text: "Chiudi", style: "cancel" },
+        { text: "Dettagli", onPress: () => showEventDetails(event) },
+      ]
+    );
+  };
+
+  const showEventDetails = (event) => {
+    console.log("Mostra dettagli evento:", event);
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("it-IT", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
   };
 
   const getEventicon = (eventType) => {
@@ -161,35 +162,7 @@ export default function EventsListScreen({ navigation }) {
     }
   };
 
-  const handleEventPress = (event) => {
-    Alert.alert(
-      event.title,
-      `${event.description}\n\nLocalità: ${event.location}\nData: ${formatDate(
-        event.createdAt
-      )}`,
-      [
-        { text: "Chiudi", style: "cancel" },
-        { text: "Dettagli", onPress: () => showEventDetails(event) },
-      ]
-    );
-  };
-
-  const showEventDetails = (event) => {
-    console.log("Mostra dettagli evento:", event);
-  };
-
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("it-IT", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
-  const renderEventitem = ({ item }) => (
+  const renderEventItem = ({ item }) => (
     <TouchableOpacity
       style={styles.eventCard}
       onPress={() => handleEventPress(item)}
@@ -255,41 +228,10 @@ export default function EventsListScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header2}>
-        <Text style={commonStyles.headerTitle}>
-          Protezione Civile | Regione Calabria
-        </Text>
-        <Image
-          source={require("../components/Logo.png")}
-          style={styles.reportButtonImage}
-        />
-      </View>
-      <View style={styles.header}>
-        <Text style={commonStyles.headerTitle}>ProCiv Calabria</Text>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("Main", { screen: "Segnala" })}
-          activeOpacity={1}
-          style={styles.reportButton}
-        >
-          <Text style={styles.reportButtonText}>Segnala</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.tabContainer}>
-        <TouchableOpacity
-          style={styles.tab}
-          onPress={() => navigation.navigate("Main", { screen: "Eventi" })}
-        >
-          <Text style={[styles.tabText]}>Mappa</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.tab}
-          onPress={() => navigation.navigate("EventsList")}
-        >
-          <Text style={(styles.tabText, styles.activeTabText)}>Lista</Text>
-        </TouchableOpacity>
-      </View>
-      {/* Dropdown personalizzato per Eventi / Le mie Segnalazioni */}
+      {/* ✅ HEADER IMPORTATO */}
+      <HeaderSection activeTab="Lista" />
+
+      {/* Dropdown "Eventi / Le mie Segnalazioni" */}
       <View style={styles.dropdownContainer}>
         <TouchableOpacity
           style={styles.dropdownButton}
@@ -309,24 +251,24 @@ export default function EventsListScreen({ navigation }) {
             <TouchableOpacity
               onPress={() => {
                 setSelectedType("Eventi");
-                setIsDropdownVisible(false); // Chiude il menu dopo la selezione
+                setIsDropdownVisible(false);
               }}
-              style={styles.dropdownItemContainer} // Stile per la voce del menu
+              style={styles.dropdownItemContainer}
             >
               <Text style={styles.dropdownItem}>Eventi</Text>
               <View
                 style={[
                   styles.circle,
-                  selectedType === "Eventi" && { backgroundColor: "blue" }, // Colore rosso se selezionato
+                  selectedType === "Eventi" && { backgroundColor: "blue" },
                 ]}
               />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
                 setSelectedType("Segnalazioni");
-                setIsDropdownVisible(false); // Chiude il menu dopo la selezione
+                setIsDropdownVisible(false);
               }}
-              style={styles.dropdownItemContainer} // Stile per la voce del menu
+              style={styles.dropdownItemContainer}
             >
               <Text style={styles.dropdownItem}>Segnalazioni</Text>
               <View
@@ -334,7 +276,7 @@ export default function EventsListScreen({ navigation }) {
                   styles.circle,
                   selectedType === "Segnalazioni" && {
                     backgroundColor: "#FF3B30",
-                  }, // Colore rosso se selezionato
+                  },
                 ]}
               />
             </TouchableOpacity>
@@ -342,10 +284,10 @@ export default function EventsListScreen({ navigation }) {
         )}
       </View>
 
-      {/* Lista degli eventi */}
+      {/* Lista eventi */}
       <FlatList
         data={events}
-        renderItem={renderEventitem}
+        renderItem={renderEventItem}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContainer}
         refreshControl={
@@ -384,7 +326,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 15,
   },
-
   circle: {
     width: 15,
     height: 15,
@@ -393,7 +334,6 @@ const styles = StyleSheet.create({
     borderColor: "blue",
     marginLeft: 10,
   },
-
   dropdownTitle2: {
     color: "#007AFF",
     fontSize: 15,
@@ -408,16 +348,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#f0f0f0",
     borderRadius: 8,
   },
-  dropdownText: { fontSize: 16, color: "#333" },
   dropdownMenu: {
     marginTop: 5,
     backgroundColor: "#f0f0f0",
     borderRadius: 8,
-    overflow: "hidden",
   },
   dropdownItem: {
-    paddingVertical: 10,
-    paddingHorizontal: 15,
     fontSize: 16,
     color: "#333",
   },
@@ -489,54 +425,4 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   emptyText: { fontSize: 16, color: "#888" },
-  reportButton: {
-    backgroundColor: "#FF6B35",
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 5,
-    borderColor: "white",
-    borderWidth: 3,
-  },
-  reportButtonText: { color: "#fff", fontSize: 16, fontWeight: "bold" },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: "#0091D6",
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-  },
-  header2: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: "#0091D6",
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-  },
-
-  tabContainer: {
-    flexDirection: "row",
-    borderBottomWidth: 1,
-    borderBottomColor: "#ddd",
-  },
-
-  tab: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    paddingVertical: 10,
-  },
-
-  tabText: {
-    marginLeft: 8,
-    color: "#666",
-  },
-  activeTabText: {
-    color: "blue",
-    fontWeight: "bold",
-  },
-
-  reportButtonImage: { width: 50, height: 50, resizeMode: "contain" },
 });
