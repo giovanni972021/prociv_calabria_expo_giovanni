@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { View, StyleSheet, Text, Image } from "react-native";
 import { commonStyles } from "../styles/commonStyles"; // Importa gli stili comuni
-import { HeaderSection } from "../components/HeaderSection";
 
 const CommunicationScreen = () => {
   const [loading, setLoading] = useState(false);
@@ -27,15 +26,15 @@ const CommunicationScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1, // Occupa tutto lo schermo
+    flex: 1,
     marginTop: 20,
   },
   headerMiddle: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    justifyContent: "left", // Questo assicura che il testo sia centrato
+    alignItems: "left", // Centra verticalmente
     backgroundColor: "#0091D6",
-    paddingHorizontal: 20,
+    paddingHorizontal: 16,
     paddingVertical: 10,
   },
   reportButtonImage: {

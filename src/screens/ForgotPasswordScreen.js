@@ -163,4 +163,3 @@ const styles = StyleSheet.create({
 });
 
 export default LoginScreen;
-//ricomincia da qui fai funzionare correttamente pulsante continua
