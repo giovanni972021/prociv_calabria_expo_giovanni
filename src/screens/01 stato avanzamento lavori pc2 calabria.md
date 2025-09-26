@@ -14,7 +14,7 @@ EventsMapScreen.js – tutto ok ma capire come importare gli eventi da event lis
 
 .
 
-ForgotPasswordScreen.js – tutto ok, ma capire quale api richiamare quando utente clicca su continua ricomincia da qui , forgot password screen
+ForgotPasswordScreen.js – tutto ok, ma capire quale api richiamare quando utente clicca su continua ricomincia da qui , forgot password screen, vedi anche chat teams con gabriele orlando
 
 .
 
@@ -22,15 +22,18 @@ HomeScreen.js tutto ok, home screen
 
 .
 
-LoginScreen.js tutto ok entrando con credenziali LLNRBL80A01G273E e 89411809 login funziona correttamente , login screem
+LoginScreen.js tutto ok entrando con credenziali
+LLNRBL80A01G273E
+89411809
+login funziona correttamente , login screem
 
 .
 
-ProfileScreen.js da terminare ricomincia da qui, profile screen
+ProfileScreen.js ricomincia da qui, profile screen, manca icona, stile da terminare, controllare tendina dati utente
 
 .
 
-RegisterScreen.js da terminare , register screen
+RegisterScreen.js da terminare , register screen ricomincia da qui, controllare funzionamento verifica password e verifica telefono,
 
 .
 

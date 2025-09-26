@@ -1,5 +1,3 @@
-//register screen ok fino alle 14 e 16 del 24 set 25
-//register screen ok fino alle 10 e 48 del 24 set 25
 import React, { useState } from "react";
 import {
   Button,
@@ -20,6 +18,10 @@ import { authService } from "../services/api";
 
 export default function RegisterScreen({ navigation }) {
   const [isPressed, setIsPressed] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [emailOtpSent, setEmailOtpSent] = useState(false);
+
   const [formData, setFormData] = useState({
     nome: "",
     cognome: "",
@@ -29,9 +31,6 @@ export default function RegisterScreen({ navigation }) {
     birthDate: null,
     sesso: "",
   });
-
-  const [loading, setLoading] = useState(false);
-  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const updateFormData = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -63,7 +62,6 @@ export default function RegisterScreen({ navigation }) {
     }
 
     setLoading(true);
-
     try {
       await authService.register({
         Nome: formData.nome,
@@ -91,6 +89,44 @@ export default function RegisterScreen({ navigation }) {
     }
   };
 
+  const handleSendEmailOtp = async () => {
+    if (!formData.emailDiRegistrazione.trim()) {
+      Alert.alert("Errore", "Inserisci un'email valida prima di procedere");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await fetch(
+        "https://pc2.dev.schema31.it/api/users/contacts-verify/email/otp/send",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: formData.emailDiRegistrazione,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Errore durante l'invio dell'OTP");
+      }
+
+      setEmailOtpSent(true);
+      Alert.alert("Email inviata", "Controlla la tua email per il codice OTP.");
+    } catch (error) {
+      console.error("Errore OTP:", error);
+      Alert.alert(
+        "Errore",
+        "Non è stato possibile inviare il codice. Riprova."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleDateChange = (event, selectedDate) => {
     setShowDatePicker(false);
     if (selectedDate) {
@@ -98,14 +134,18 @@ export default function RegisterScreen({ navigation }) {
     }
   };
 
-  const renderSubmitButton = (label, extraStyle = {}) => (
+  const renderSubmitButton = (
+    label,
+    extraStyle = {},
+    onPressAction = handleRegister
+  ) => (
     <TouchableOpacity
       style={[
         styles.registerButton,
         loading && styles.registerButtonDisabled,
         extraStyle,
       ]}
-      onPress={handleRegister}
+      onPress={onPressAction}
       disabled={loading}
     >
       {loading ? (
@@ -218,15 +258,43 @@ export default function RegisterScreen({ navigation }) {
               <TextInput
                 style={styles.input}
                 value={formData.emailDiRegistrazione}
-                onChangeText={(text) =>
-                  updateFormData("emailDiRegistrazione", text)
-                }
+                onChangeText={(text) => {
+                  updateFormData("emailDiRegistrazione", text);
+                  setEmailOtpSent(false); // reset quando cambia email
+                }}
                 keyboardType="email-address"
                 autoCapitalize="none"
               />
             </View>
 
-            {renderSubmitButton("Verifica email")}
+            {/* Bottoni dinamici per email */}
+            {emailOtpSent ? (
+              <>
+                <TouchableOpacity
+                  style={styles.registerButton}
+                  onPress={() => setEmailOtpSent(false)}
+                  disabled={loading}
+                >
+                  <Text style={styles.registerButtonText}>Modifica email</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.registerButton}
+                  onPress={handleSendEmailOtp}
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <ActivityIndicator color="#fff" />
+                  ) : (
+                    <Text style={styles.registerButtonText}>
+                      Richiedi nuovo codice
+                    </Text>
+                  )}
+                </TouchableOpacity>
+              </>
+            ) : (
+              renderSubmitButton("Verifica email", {}, handleSendEmailOtp)
+            )}
 
             <View style={styles.horizontalLine} />
 
@@ -244,8 +312,10 @@ export default function RegisterScreen({ navigation }) {
 
             {renderSubmitButton("Verifica numero")}
 
+            {/* Procedi */}
             {renderSubmitButton("Procedi", styles.registerButton2)}
 
+            {/* Annulla */}
             <View style={styles.bottomContainer}>
               <TouchableOpacity
                 onPress={() => navigation.goBack()}
@@ -260,6 +330,7 @@ export default function RegisterScreen({ navigation }) {
     </SafeAreaView>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -321,17 +392,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
   },
-
   cancelButton: {
     alignItems: "center",
     marginBottom: 40,
   },
   cancelButtonText: {
-    color: "#000000ff",
+    color: "#000",
     fontSize: 16,
     fontWeight: "bold",
   },
-
   selectedDateText: {
     fontSize: 24,
     color: "#1E3A8A",
