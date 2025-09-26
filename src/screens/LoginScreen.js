@@ -1,5 +1,3 @@
-//estetica uguale a originale, pulsante continua e pulsante annulla ok
-//ricomincia da qui sistemare pulsante hai dimenticato le credenziali
 import React, { useState } from "react";
 import {
   View,
