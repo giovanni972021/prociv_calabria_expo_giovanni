@@ -4,7 +4,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 
-// Import delle schermate (da creare)
+// Import delle schermate
+import DatiUtente from "../screens/DatiUtente";
 import HomeScreen from "../screens/HomeScreen";
 import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
@@ -15,11 +16,39 @@ import WeatherBulletinScreen from "../screens/WeatherBulletinScreen";
 import CommunicationsScreen from "../screens/CommunicationsScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
+import AggiornaContatti from "../screens/AggiornaContatti";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+const ProfiloStack = createStackNavigator();
 
-// Navigazione principale con tab
+// Stack annidato per Profilo + DatiUtente
+function ProfiloStackScreen() {
+  return (
+    <ProfiloStack.Navigator screenOptions={{ headerShown: false }}>
+      <ProfiloStack.Screen name="ProfileScreen" component={ProfileScreen} />
+      <ProfiloStack.Screen name="DatiUtente" component={DatiUtente} />
+      <ProfiloStack.Screen
+        name="AggiornaContatti"
+        component={AggiornaContatti}
+      />
+    </ProfiloStack.Navigator>
+  );
+}
+
+function EventiStackScreen() {
+  return (
+    <ProfiloStack.Navigator screenOptions={{ headerShown: false }}>
+      <ProfiloStack.Screen name="EventsMapScreen" component={EventsMapScreen} />
+      <ProfiloStack.Screen
+        name="EventsListScreen"
+        component={EventsListScreen}
+      />
+    </ProfiloStack.Navigator>
+  );
+}
+
+// Tab navigator principale
 function MainTabNavigator() {
   return (
     <Tab.Navigator
@@ -27,7 +56,7 @@ function MainTabNavigator() {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
-          if (route.name === "Eventi") {
+          if (route.name === "EventsMapScreen") {
             iconName = focused ? "map" : "map-outline";
           } else if (route.name === "Segnala") {
             iconName = focused ? "add-circle" : "add-circle-outline";
@@ -46,13 +75,21 @@ function MainTabNavigator() {
       })}
     >
       <Tab.Screen
-        name="Eventi"
-        component={EventsMapScreen}
+        name="Mappa"
+        component={EventiStackScreen}
         options={{
           title: "Eventi",
           headerShown: false,
+          tabBarIcon: ({ focused, color, size }) => (
+            <Ionicons
+              name={focused ? "person" : "person-outline"}
+              size={size}
+              color={color}
+            />
+          ),
         }}
       />
+
       <Tab.Screen
         name="Bollettino"
         component={WeatherBulletinScreen}
@@ -65,8 +102,18 @@ function MainTabNavigator() {
       />
       <Tab.Screen
         name="Profilo"
-        component={ProfileScreen}
-        options={{ title: "Profilo", headerShown: false }}
+        component={ProfiloStackScreen}
+        options={{
+          title: "Profilo",
+          headerShown: false,
+          tabBarIcon: ({ focused, color, size }) => (
+            <Ionicons
+              name={focused ? "person" : "person-outline"}
+              size={size}
+              color={color}
+            />
+          ),
+        }}
       />
     </Tab.Navigator>
   );
@@ -104,13 +151,11 @@ export default function AppNavigator() {
             headerShown: false,
           }}
         />
-
         <Stack.Screen
           name="ForgotPasswordScreen"
           component={ForgotPasswordScreen}
           options={{ title: "...", headerShown: false }}
         />
-
         <Stack.Screen
           name="Login"
           component={LoginScreen}
@@ -123,13 +168,8 @@ export default function AppNavigator() {
         />
         <Stack.Screen
           name="Main"
-          component={MainTabNavigator} // Questo è il Tab Navigator che contiene "Eventi"
+          component={MainTabNavigator}
           options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="EventsList"
-          component={EventsListScreen}
-          options={{ title: "Lista Eventi", headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>

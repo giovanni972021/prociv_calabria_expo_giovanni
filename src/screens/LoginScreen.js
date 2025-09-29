@@ -128,10 +128,7 @@ const LoginScreen = ({ navigation }) => {
             <TouchableOpacity onPress={fillTestCredentials} />
             <View style={styles.forgotContainer}>
               <TouchableOpacity
-                onPress={() =>
-                  //ricomincia da qui anziche rimandare a pagina eventi rimanda a pagina forgot password
-                  navigation.navigate("ForgotPasswordScreen")
-                }
+                onPress={() => navigation.navigate("ForgotPasswordScreen")}
               >
                 <Text style={styles.forgotText}>
                   Hai dimenticato le{" "}

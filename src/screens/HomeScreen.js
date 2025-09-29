@@ -8,11 +8,14 @@ import {
   StatusBar,
 } from "react-native";
 
+import HeaderSection from "../components/HeaderSection2"; // ✅ IMPORTA HEADER
+import { commonStyles } from "../styles/commonStyles";
+
 export default function HomeScreen({ navigation }) {
   return (
     <>
       <StatusBar backgroundColor="#2563EB" barStyle="light-content" />
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={[commonStyles.container, styles.container]}>
         <View style={styles.header}>
           <Text style={[styles.titleCommon, styles.title2]}>Accesso</Text>
           <Text style={[styles.titleCommon, styles.title]}>
@@ -54,10 +57,8 @@ export default function HomeScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: "#FFFFFF",
     paddingHorizontal: 20,
-    paddingTop: 20,
+    paddingTop: 9,
   },
   header: { marginBottom: 30 },
   titleCommon: {

@@ -9,38 +9,38 @@ const HeaderSection = ({ activeTab = "Lista" }) => {
 
   return (
     <>
-      {/* Logo + Titolo */}
-      <View style={styles.headerTop}>
+      {/* Protezione Civile | Regione Calabria + foto */}
+      <View style={commonStyles.headerTop}>
         <Text style={commonStyles.headerTitle}>
           Protezione Civile | Regione Calabria
         </Text>
         <Image
           source={require("../components/Logo.png")}
-          style={styles.reportButtonImage}
+          style={commonStyles.reportButtonImage}
         />
       </View>
 
-      {/* Titolo + Bottone Segnala */}
-      <View style={styles.headerMiddle}>
+      {/* Prociv Calabria + bottone segnala */}
+      <View style={commonStyles.headerMiddle}>
         <Text style={commonStyles.headerTitle}>ProCiv Calabria</Text>
         <TouchableOpacity
           onPress={() => navigation.navigate("CreateReportScreen")}
-          style={styles.reportButton}
+          style={commonStyles.reportButton}
         >
-          <Text style={styles.reportButtonText}>Segnala</Text>
+          <Text style={commonStyles.reportButtonText}>Segnala</Text>
         </TouchableOpacity>
       </View>
 
       {/* Tab Mappa / Lista */}
-      <View style={styles.tabContainer}>
+      <View style={commonStyles.tabContainer}>
         <TouchableOpacity
           style={commonStyles.tab}
-          onPress={() => navigation.navigate("Main", { screen: "Eventi" })}
+          onPress={() => navigation.navigate("EventsMapScreen")}
         >
           <Text
             style={[
-              styles.tabText,
-              activeTab === "Mappa" && styles.activeTabText,
+              commonStyles.tabText,
+              activeTab === "Mappa" && commonStyles.activeTabText,
             ]}
           >
             Mappa
@@ -48,12 +48,12 @@ const HeaderSection = ({ activeTab = "Lista" }) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={commonStyles.tab}
-          onPress={() => navigation.navigate("EventsList")}
+          onPress={() => navigation.navigate("EventsListScreen")}
         >
           <Text
             style={[
-              styles.tabText,
-              activeTab === "Lista" && styles.activeTabText,
+              commonStyles.tabText,
+              activeTab === "Lista" && commonStyles.activeTabText,
             ]}
           >
             Lista
@@ -63,57 +63,4 @@ const HeaderSection = ({ activeTab = "Lista" }) => {
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  headerTop: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: "#0091D6",
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-  },
-  headerMiddle: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: "#0091D6",
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-  },
-  reportButton: {
-    backgroundColor: "#FF6B35",
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 5,
-    borderColor: "white",
-    borderWidth: 3,
-  },
-  reportButtonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  reportButtonImage: {
-    width: 50,
-    height: 50,
-    resizeMode: "contain",
-  },
-  tabContainer: {
-    flexDirection: "row",
-    borderBottomWidth: 1,
-    borderBottomColor: "#ddd",
-  },
-  tabText: {
-    marginLeft: 8,
-    color: "#666",
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-  },
-  activeTabText: {
-    color: "blue",
-    fontWeight: "bold",
-  },
-});
-
 export default HeaderSection;

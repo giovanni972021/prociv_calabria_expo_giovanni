@@ -132,7 +132,7 @@ export default function EventsMapScreen({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={commonStyles.container}>
       {/* ✅ HEADER UNIFICATO */}
       <HeaderSection activeTab="Mappa" />
 
@@ -170,10 +170,6 @@ export default function EventsMapScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: 20,
-  },
   map: {
     flex: 1,
   },

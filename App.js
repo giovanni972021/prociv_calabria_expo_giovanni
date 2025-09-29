@@ -6,8 +6,6 @@ import AppNavigator from "./src/navigation/AppNavigator"; // Assicurati che il p
 export default function App() {
   return (
     <>
-      <StatusBar style="light" backgroundColor="#FF6B35" />
-
       {/* Navigator dell'app */}
       <AppNavigator />
     </>

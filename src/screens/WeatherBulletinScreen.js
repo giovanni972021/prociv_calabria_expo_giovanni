@@ -3,25 +3,12 @@ import { View, Text, StyleSheet, Image, Dimensions } from "react-native";
 import { WebView } from "react-native-webview";
 
 import { commonStyles } from "../styles/commonStyles"; // Stili comuni
+import HeaderSection from "../components/HeaderSection2"; // ✅ IMPORTA HEADER
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      {/* Header superiore */}
-      <View style={commonStyles.header}>
-        <Text style={commonStyles.headerTitle}>
-          Protezione Civile | Regione Calabriaaaaa
-        </Text>
-        <Image
-          source={require("../components/Logo.png")}
-          style={styles.reportButtonImage}
-        />
-      </View>
-
-      {/* Barra centrale */}
-      <View style={styles.headerMiddle}>
-        <Text style={commonStyles.headerTitle}>ProCiv Calabria</Text>
-      </View>
+    <View style={commonStyles.container}>
+      <HeaderSection />
 
       {/* WebView per il bollettino meteo */}
       <WebView
@@ -38,11 +25,6 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f8f9fa",
-    marginTop: 20,
-  },
   headerMiddle: {
     flexDirection: "row",
     justifyContent: "flex-start",

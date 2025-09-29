@@ -18,7 +18,7 @@ ForgotPasswordScreen.js – tutto ok, ma capire quale api richiamare quando uten
 
 .
 
-HomeScreen.js tutto ok, home screen
+TUTTO OK HomeScreen.js home screen
 
 .
 
@@ -29,12 +29,9 @@ login funziona correttamente , login screem
 
 .
 
-ProfileScreen.js ricomincia da qui, profile screen, manca icona, stile da terminare, controllare tendina dati utente
-
+DA TERMINARE ProfileScreen.js ricomincia da qui, profile screen, manca icona, stile da terminare, controllare tendina dati utente
 .
-
-RegisterScreen.js da terminare , register screen ricomincia da qui, controllare funzionamento verifica password e verifica telefono,
-
+DA TERMINARE , postman ogni cinque secondi mi restituisce errore "Error:getaddrinfo ENOTFOUND pc2.dev.schema31.it
+" RegisterScreen.js da terminare , register screen ricomincia da qui, controllare funzionamento verifica password e verifica telefono,
 .
-
-WeatherBulletinScreen.js weather bulletin screen, tutto ok, ma perche quando clicco su link parte download automatico? da app play store questo non accade, dipende da me o da link php? ricomincia da qui
+TUTTO OK MA... WeatherBulletinScreen.js weather bulletin screen, tutto ok, ma perche quando clicco su link parte download automatico? da app play store questo non accade, dipende da me o da link php? ricomincia da qui

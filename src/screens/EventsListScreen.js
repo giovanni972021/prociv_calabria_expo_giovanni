@@ -18,7 +18,7 @@ export default function EventsListScreen({ navigation }) {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  const [selectedType, setSelectedType] = useState("Eventi");
+  const [selectedType, setSelectedType] = useState("EventsMapScreen");
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
   useEffect(() => {
@@ -58,7 +58,7 @@ export default function EventsListScreen({ navigation }) {
       ];
 
       const filteredEvents =
-        selectedType === "Eventi"
+        selectedType === "EventsMapScreen"
           ? mockEvents
           : mockEvents.filter((event) => event.id === "1");
 
@@ -227,7 +227,7 @@ export default function EventsListScreen({ navigation }) {
   );
 
   return (
-    <View style={styles.container}>
+    <View style={commonStyles.container}>
       {/* ✅ HEADER IMPORTATO */}
       <HeaderSection activeTab="Lista" />
 
@@ -250,7 +250,7 @@ export default function EventsListScreen({ navigation }) {
             <Text style={styles.dropdownTitle2}> Seleziona tipologia</Text>
             <TouchableOpacity
               onPress={() => {
-                setSelectedType("Eventi");
+                setSelectedType("EventsMapScreen");
                 setIsDropdownVisible(false);
               }}
               style={styles.dropdownItemContainer}
@@ -259,7 +259,9 @@ export default function EventsListScreen({ navigation }) {
               <View
                 style={[
                   styles.circle,
-                  selectedType === "Eventi" && { backgroundColor: "blue" },
+                  selectedType === "EventsMapScreen" && {
+                    backgroundColor: "blue",
+                  },
                 ]}
               />
             </TouchableOpacity>
@@ -312,7 +314,6 @@ export default function EventsListScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { marginTop: 20, flex: 1 },
   dropdownContainer: { paddingVertical: 15, paddingHorizontal: 20 },
   dropdownTitle: {
     color: "#007AFF",

@@ -8,14 +8,21 @@ import {
   Image,
   Linking,
 } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
+import Icon from "react-native-vector-icons/FontAwesome5";
 import { commonStyles } from "../styles/commonStyles";
+import { useNavigation } from "@react-navigation/native"; // Importa il hook useNavigation
 
 const CommunicationScreen = () => {
   const [showInfo, setShowInfo] = useState(false);
+  const [showUserData, setShowUserData] = useState(false); // State to manage user data dropdown
+  const navigation = useNavigation(); // Inizializza il navigatore
 
   const handleInfoClick = () => {
     setShowInfo(!showInfo);
+  };
+
+  const handleUserDataClick = () => {
+    setShowUserData(!showUserData); // Toggle dropdown visibility
   };
 
   const openURL = (url) => {
@@ -24,37 +31,70 @@ const CommunicationScreen = () => {
     );
   };
 
+  const handleLogout = () => {
+    navigation.replace("Home"); // Use replace to prevent going back to the previous screen
+  };
+
   return (
-    <View style={styles.container}>
-      <View style={commonStyles.header}>
-        <Text style={commonStyles.headerTitle}>
-          Protezione Civile | Regione Calabria
-        </Text>
-        <Image
-          source={require("../components/Logo.png")}
-          style={styles.reportButtonImage}
-        />
-      </View>
+    <View style={commonStyles.container}>
+      <>
+        {/* Protezione Civile | Regione Calabria + foto */}
+        <View style={commonStyles.headerTop}>
+          <Text style={commonStyles.headerTitle}>
+            Protezione Civile | Regione Calabria
+          </Text>
+          <Image
+            source={require("../components/Logo.png")}
+            style={commonStyles.reportButtonImage}
+          />
+        </View>
 
-      <View style={styles.headerMiddle}>
-        <Text style={commonStyles.headerTitle}>ProCiv Calabria</Text>
-      </View>
-
-      <View style={styles.profileSection}>
-        <Text style={styles.profileName}>Claudia Blanda</Text>
-      </View>
+        {/* Prociv Calabria + bottone segnala */}
+        <View style={commonStyles.headerMiddle}>
+          <Text style={commonStyles.headerTitle}>ProCiv Calabria</Text>
+          {/* Icona di Logout */}
+          <TouchableOpacity onPress={handleLogout}>
+            <Icon name="sign-out-alt" size={24} color="white" />
+          </TouchableOpacity>
+        </View>
+      </>
 
       <ScrollView style={styles.menuItemsContainer}>
-        {renderMenuItem("Dati utente")}
+        <TouchableOpacity onPress={handleUserDataClick} style={styles.menuItem}>
+          <Text style={styles.menuText}>Dati utente</Text>
+          <Icon
+            name={showUserData ? "chevron-down" : "chevron-right"}
+            size={16}
+            color="#0091D6"
+          />
+        </TouchableOpacity>
+
+        {/* Render dropdown menu for "Dati utente" */}
+        {showUserData && (
+          <View style={styles.dropdownMenu}>
+            <TouchableOpacity onPress={() => navigation.navigate("DatiUtente")}>
+              <Text style={styles.menuText}>Dati utente</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => {
+                /* logica per eliminare utente */
+              }}
+            >
+              <Text style={styles.menuText}>Elimina utente</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
         {renderMenuItem("Profili attivi")}
         {renderMenuItem("Sito Internet", () =>
-          openURL("https://www.protezionecivilecalabria.it/")
+          openURL("https://www.regione.calabria.it")
         )}
         {renderMenuItem("Informativa Privacy", () =>
-          openURL("https://www.protezionecivilecalabria.it/?page_id=314")
+          openURL("https://protezionecivilecalabria.it/privacy")
         )}
         {renderMenuItem("Contattaci", () =>
-          openURL("https://www.protezionecivilecalabria.it/?page_id=317")
+          openURL("https://protezionecivilecalabria.it/contatti")
         )}
 
         <TouchableOpacity onPress={handleInfoClick} style={styles.menuItem}>
@@ -103,35 +143,6 @@ const renderMenuItem = (title, onPress) => (
 );
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: 20,
-    backgroundColor: "#F5F5F5",
-  },
-  headerMiddle: {
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "center",
-    backgroundColor: "#0091D6",
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-  },
-  reportButtonImage: {
-    width: 40,
-    height: 40,
-    resizeMode: "contain",
-    marginLeft: 10,
-  },
-  profileSection: {
-    backgroundColor: "#0091D6",
-    padding: 16,
-    alignItems: "center",
-  },
-  profileName: {
-    color: "white",
-    fontSize: 18,
-    fontWeight: "bold",
-  },
   menuItemsContainer: {
     marginTop: 20,
   },
@@ -148,6 +159,12 @@ const styles = StyleSheet.create({
   menuText: {
     fontSize: 16,
     color: "#333333",
+  },
+  dropdownMenu: {
+    paddingLeft: 20,
+    paddingTop: 10,
+    paddingBottom: 10,
+    backgroundColor: "#F5F5F5",
   },
   infoTextContainer: {
     backgroundColor: "#FFFFFF",

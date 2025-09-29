@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  Button,
   View,
   Text,
   TextInput,
@@ -14,15 +13,16 @@ import {
   ScrollView,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { authService } from "../services/api";
+import { authService } from "../services/api"; // Assuming you have api services
 
 export default function RegisterScreen({ navigation }) {
-  const [isPressed, setIsPressed] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [emailOtpSent, setEmailOtpSent] = useState(false);
+  const [showPicker, setShowPicker] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [timer, setTimer] = useState(0);
 
-  const [formData, setFormData] = useState({
+  const [form, setForm] = useState({
     nome: "",
     cognome: "",
     codiceFiscale: "",
@@ -32,11 +32,9 @@ export default function RegisterScreen({ navigation }) {
     sesso: "",
   });
 
-  const updateFormData = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
+  const update = (f, v) => setForm((p) => ({ ...p, [f]: v }));
 
-  const isFormValid = () => {
+  const isValid = () => {
     const {
       nome,
       cognome,
@@ -44,116 +42,145 @@ export default function RegisterScreen({ navigation }) {
       emailDiRegistrazione,
       birthDate,
       sesso,
-    } = formData;
+    } = form;
     return (
-      nome.trim() &&
-      cognome.trim() &&
-      codiceFiscale.trim() &&
-      emailDiRegistrazione.trim() &&
+      nome &&
+      cognome &&
+      codiceFiscale &&
+      emailDiRegistrazione &&
       birthDate &&
       sesso
     );
   };
 
   const handleRegister = async () => {
-    if (!isFormValid()) {
-      Alert.alert("Errore", "Compila tutti i campi obbligatori");
-      return;
-    }
+    if (!isValid())
+      return Alert.alert("Errore", "Compila tutti i campi obbligatori");
 
     setLoading(true);
     try {
       await authService.register({
-        Nome: formData.nome,
-        Cognome: formData.cognome,
-        codiceFiscale: formData.codiceFiscale,
-        email: formData.emailDiRegistrazione,
-        phoneNumber: formData.phoneNumber,
-        birthDate: formData.birthDate.toISOString(),
-        sesso: formData.sesso,
+        Nome: form.nome,
+        Cognome: form.cognome,
+        codiceFiscale: form.codiceFiscale,
+        email: form.emailDiRegistrazione,
+        phoneNumber: form.phoneNumber,
+        birthDate: form.birthDate.toISOString(),
+        sesso: form.sesso,
       });
-
-      Alert.alert(
-        "Registrazione completata",
-        "Il tuo account è stato creato con successo. Ora puoi effettuare il login.",
-        [{ text: "Vai al Login", onPress: () => navigation.navigate("Login") }]
-      );
-    } catch (error) {
-      console.error("Errore registrazione:", error);
-      Alert.alert(
-        "Errore di registrazione",
-        "Impossibile completare la registrazione. Riprova più tardi."
-      );
+      Alert.alert("Registrazione completata", "Account creato con successo", [
+        { text: "Vai al Login", onPress: () => navigation.navigate("Login") },
+      ]);
+    } catch {
+      Alert.alert("Errore", "Registrazione fallita");
     } finally {
       setLoading(false);
     }
   };
 
-  // ✅ FUNZIONE CORRETTA PER INVIO OTP
-  const handleSendEmailOtp = async () => {
-    const email = formData.emailDiRegistrazione.trim();
+  const handleSendOtp = async () => {
+    const email = form.emailDiRegistrazione.trim();
+    if (!email) return Alert.alert("Errore", "Inserisci un'email valida");
 
-    if (!email) {
-      Alert.alert("Errore", "Inserisci un'email valida prima di procedere");
-      return;
-    }
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    if (!emailRegex.test(email))
+      return Alert.alert("Errore", "Inserisci un'email corretta");
 
+    setLoading(true);
     try {
-      setLoading(true);
-
-      const response = await fetch(
+      const res = await fetch(
         "https://pc2.dev.schema31.it/api/users/contacts-verify/email/otp/send",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ contact: email }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        console.log("Errore dal server:", data); // 👈 Log utile
+        throw new Error(data.message || "Errore invio OTP");
+      }
+
+      setOtpSent(true);
+      setTimer(480); // Start 8 minute timer
+
+      Alert.alert("Email inviata", "Controlla la tua email");
+    } catch (error) {
+      console.log("Errore durante fetch OTP:", error); // 👈 Logga l'errore completo
+      Alert.alert("Errore", error.message || "Invio codice fallito");
+    }
+  };
+
+  const handleVerifyOtp = async () => {
+    if (!otp || otp.length !== 6)
+      return Alert.alert("Errore", "Inserisci un codice OTP valido");
+
+    setLoading(true);
+    try {
+      const res = await fetch(
+        "https://pc2.dev.schema31.it/api/users/contacts-verify/email/otp/verify",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            contact: email, // 👈 chiave corretta
+            contact: form.emailDiRegistrazione.trim(),
+            otp,
           }),
         }
       );
 
-      const responseText = await response.text();
-      console.log("OTP response:", response.status, responseText);
-
-      if (!response.ok) {
-        throw new Error(`Errore durante l'invio dell'OTP (${response.status})`);
+      const data = await res.json();
+      if (res.ok && data.verified) {
+        Alert.alert("Successo", "Email verificata");
+      } else {
+        Alert.alert("Errore", "Codice OTP non valido o scaduto");
       }
-
-      setEmailOtpSent(true);
-      Alert.alert("Email inviata", "Controlla la tua email per il codice OTP.");
-    } catch (error) {
-      console.error("Errore OTP:", error);
-      Alert.alert(
-        "Errore",
-        "Non è stato possibile inviare il codice. Riprova."
-      );
+    } catch {
+      Alert.alert("Errore", "Verifica fallita");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleDateChange = (event, selectedDate) => {
-    setShowDatePicker(false);
-    if (selectedDate) {
-      updateFormData("birthDate", selectedDate);
-    }
-  };
+  useEffect(() => {
+    if (!timer) return;
+    const interval = setInterval(
+      () => setTimer((t) => Math.max(t - 1, 0)),
+      1000
+    );
+    return () => clearInterval(interval);
+  }, [timer]);
 
-  const renderSubmitButton = (
-    label,
-    extraStyle = {},
-    onPressAction = handleRegister
-  ) => (
+  const formatTime = (s) =>
+    `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(
+      2,
+      "0"
+    )}`;
+
+  const renderInput = (label, value, key, extra = {}) => (
+    <View style={styles.inputContainer}>
+      <Text style={styles.label}>{label}</Text>
+      <TextInput
+        style={styles.input}
+        value={value}
+        onChangeText={(t) => update(key, t)}
+        {...extra}
+      />
+    </View>
+  );
+
+  const renderBtn = (label, onPress, extraStyle = {}, disabled = false) => (
     <TouchableOpacity
       style={[
         styles.registerButton,
-        loading && styles.registerButtonDisabled,
         extraStyle,
+        (loading || disabled) && styles.registerButtonDisabled,
       ]}
-      onPress={onPressAction}
-      disabled={loading}
+      onPress={onPress}
+      disabled={loading || disabled}
     >
       {loading ? (
         <ActivityIndicator color="#fff" />
@@ -169,8 +196,11 @@ export default function RegisterScreen({ navigation }) {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.keyboardView}
       >
-        <ScrollView contentContainerStyle={styles.scrollContent}>
-          {/* Header */}
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          bounces={false}
+          overScrollMode="never"
+        >
           <View style={styles.header}>
             <Text style={styles.title}>Registrati</Text>
             <Text style={styles.subtitle}>
@@ -178,151 +208,123 @@ export default function RegisterScreen({ navigation }) {
             </Text>
           </View>
 
-          {/* Form */}
           <View style={styles.form}>
-            {/* Nome */}
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Nome *</Text>
-              <TextInput
-                style={styles.input}
-                value={formData.nome}
-                onChangeText={(text) => updateFormData("nome", text)}
-              />
-            </View>
+            {renderInput("Nome *", form.nome, "nome")}
+            {renderInput("Cognome *", form.cognome, "cognome")}
+            {renderInput(
+              "Codice Fiscale *",
+              form.codiceFiscale,
+              "codiceFiscale",
+              { maxLength: 16 }
+            )}
 
-            {/* Cognome */}
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Cognome *</Text>
-              <TextInput
-                style={styles.input}
-                value={formData.cognome}
-                onChangeText={(text) => updateFormData("cognome", text)}
-              />
-            </View>
-
-            {/* Codice Fiscale */}
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Codice Fiscale *</Text>
-              <TextInput
-                style={styles.input}
-                value={formData.codiceFiscale}
-                onChangeText={(text) => updateFormData("codiceFiscale", text)}
-                maxLength={16}
-              />
-            </View>
-
-            {/* Data di Nascita */}
             <TouchableOpacity
               style={styles.dateButton}
-              onPress={() => setShowDatePicker(true)}
+              onPress={() => setShowPicker(true)}
             >
               <Text style={styles.dateButtonText}>Data di Nascita</Text>
             </TouchableOpacity>
 
-            {showDatePicker && (
+            {showPicker && (
               <DateTimePicker
-                value={formData.birthDate || new Date()}
+                value={form.birthDate || new Date()}
                 mode="date"
                 display="default"
-                onChange={handleDateChange}
+                onChange={(e, date) => {
+                  setShowPicker(false);
+                  if (date) update("birthDate", date);
+                }}
               />
             )}
-
-            {formData.birthDate && (
+            {form.birthDate && (
               <Text style={styles.selectedDateText}>
-                {formData.birthDate.toLocaleDateString()}
+                {form.birthDate.toLocaleDateString()}
               </Text>
             )}
 
-            {/* Sesso */}
             <View style={styles.sessoContainer}>
               <Text style={styles.label}>Sesso *</Text>
               <View style={styles.sessoOptions}>
-                {["Maschio", "Femmina"].map((option) => (
+                {["Maschio", "Femmina"].map((opt) => (
                   <TouchableOpacity
-                    key={option}
+                    key={opt}
                     style={styles.radioButton}
-                    onPress={() => updateFormData("sesso", option)}
+                    onPress={() => update("sesso", opt)}
                   >
                     <View
                       style={[
                         styles.radioCircle,
-                        formData.sesso === option && styles.selectedCircle,
+                        form.sesso === opt && styles.selectedCircle,
                       ]}
                     />
-                    <Text style={styles.radioText}>{option}</Text>
+                    <Text style={styles.radioText}>{opt}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
             </View>
 
             <View style={styles.horizontalLine} />
-
-            {/* Email */}
             <Text style={styles.title2}>Email di registrazione *</Text>
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Email</Text>
-              <TextInput
-                style={styles.input}
-                value={formData.emailDiRegistrazione}
-                onChangeText={(text) => {
-                  updateFormData("emailDiRegistrazione", text);
-                  setEmailOtpSent(false); // reset quando cambia email
-                }}
-                keyboardType="email-address"
-                autoCapitalize="none"
-              />
-            </View>
+            {renderInput(
+              "Email",
+              form.emailDiRegistrazione,
+              "emailDiRegistrazione",
+              {
+                keyboardType: "email-address",
+                autoCapitalize: "none",
+                onChangeText: (t) => {
+                  update("emailDiRegistrazione", t);
+                  setOtpSent(false);
+                  setOtp("");
+                  setTimer(0);
+                },
+              }
+            )}
 
-            {/* Bottoni dinamici per email */}
-            {emailOtpSent ? (
+            {otpSent ? (
               <>
-                <TouchableOpacity
-                  style={styles.registerButton}
-                  onPress={() => setEmailOtpSent(false)}
-                  disabled={loading}
-                >
-                  <Text style={styles.registerButtonText}>Modifica email</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={styles.registerButton}
-                  onPress={handleSendEmailOtp}
-                  disabled={loading}
-                >
-                  {loading ? (
-                    <ActivityIndicator color="#fff" />
-                  ) : (
-                    <Text style={styles.registerButtonText}>
-                      Richiedi nuovo codice
-                    </Text>
-                  )}
-                </TouchableOpacity>
+                {renderBtn("Modifica email", () => {
+                  setOtpSent(false);
+                  setTimer(0);
+                  setOtp("");
+                })}
+                {renderBtn(
+                  "Richiedi nuovo codice",
+                  handleSendOtp,
+                  {},
+                  timer > 0
+                )}
+                <Text>Non hai ricevuto il codice? Attendi</Text>
+                <Text>Digita il codice ricevuto via mail e fai tap su</Text>
+                <Text>"Verifica codice email"</Text>
+                <Text>entro {formatTime(timer)}</Text>
+                {renderInput("Digita codice email *", otp, "", {
+                  keyboardType: "number-pad",
+                  maxLength: 6,
+                  onChangeText: setOtp,
+                })}
+                {renderBtn(
+                  "Verifica codice mail",
+                  handleVerifyOtp,
+                  {},
+                  !otp || timer <= 0
+                )}
               </>
             ) : (
-              renderSubmitButton("Verifica email", {}, handleSendEmailOtp)
+              renderBtn("Verifica email", handleSendOtp)
             )}
 
             <View style={styles.horizontalLine} />
-
-            {/* Numero di cellulare */}
             <Text style={styles.title2}>Numero di cellulare</Text>
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Numero di cellulare</Text>
-              <TextInput
-                style={styles.input}
-                value={formData.phoneNumber}
-                onChangeText={(text) => updateFormData("phoneNumber", text)}
-                keyboardType="phone-pad"
-              />
-            </View>
+            {renderInput(
+              "Numero di cellulare",
+              form.phoneNumber,
+              "phoneNumber",
+              { keyboardType: "phone-pad" }
+            )}
+            {renderBtn("Verifica numero")}
+            {renderBtn("Procedi", handleRegister, styles.registerButton2)}
 
-            {renderSubmitButton("Verifica numero")}
-
-            {/* Procedi */}
-            {renderSubmitButton("Procedi", styles.registerButton2)}
-
-            {/* Annulla */}
             <View style={styles.bottomContainer}>
               <TouchableOpacity
                 onPress={() => navigation.goBack()}
@@ -338,50 +340,36 @@ export default function RegisterScreen({ navigation }) {
   );
 }
 
+const baseShadow = {
+  elevation: 3,
+  shadowColor: "#000",
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.25,
+  shadowRadius: 3.84,
+};
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f8f9fa",
-  },
-  scrollContent: {
-    paddingHorizontal: 20,
-    paddingVertical: 40,
-  },
-  header: {
-    marginBottom: 30,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "#333",
-    marginBottom: 10,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: "#666",
-    marginTop: 10,
-  },
+  container: { flex: 1, backgroundColor: "#f8f9fa" },
+  keyboardView: { flex: 1 },
+  scrollContent: { paddingHorizontal: 20, paddingVertical: 40 },
+  header: { marginBottom: 30 },
+  title: { fontSize: 28, fontWeight: "bold", color: "#333", marginBottom: 10 },
+  subtitle: { fontSize: 16, color: "#666", marginTop: 10 },
   title2: {
     fontSize: 20,
     color: "#666",
     marginBottom: 20,
     textAlign: "center",
   },
-  form: {
-    flex: 1,
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#333",
-  },
+  form: { flex: 1 },
+  label: { fontSize: 16, fontWeight: "600", color: "#333" },
+  inputContainer: { marginBottom: 10 },
   input: {
     height: 50,
     fontSize: 16,
     color: "#333",
     borderBottomWidth: 2,
     borderBottomColor: "#333",
-    paddingHorizontal: 0,
     marginBottom: 20,
   },
   dateButton: {
@@ -394,37 +382,16 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     alignSelf: "center",
   },
-  dateButtonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  cancelButton: {
-    alignItems: "center",
-    marginBottom: 14,
-  },
-  cancelButtonText: {
-    color: "#000",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
+  dateButtonText: { color: "#fff", fontSize: 16, fontWeight: "600" },
   selectedDateText: {
     fontSize: 24,
     color: "#1E3A8A",
     textAlign: "center",
-  },
-  sessoContainer: {
     marginBottom: 10,
   },
-  sessoOptions: {
-    flexDirection: "column",
-    justifyContent: "space-between",
-  },
-  radioButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 10,
-  },
+  sessoContainer: { marginBottom: 10 },
+  sessoOptions: { flexDirection: "column", justifyContent: "space-between" },
+  radioButton: { flexDirection: "row", alignItems: "center", marginBottom: 10 },
   radioCircle: {
     height: 20,
     width: 20,
@@ -433,18 +400,8 @@ const styles = StyleSheet.create({
     borderColor: "#333",
     marginRight: 10,
   },
-  selectedCircle: {
-    backgroundColor: "#28a745",
-  },
-  radioText: {
-    fontSize: 16,
-    color: "#333",
-    paddingVertical: 15,
-  },
-  bottomContainer: {
-    justifyContent: "flex-end",
-    paddingHorizontal: 20,
-  },
+  selectedCircle: { backgroundColor: "#28a745" },
+  radioText: { fontSize: 16, color: "#333", paddingVertical: 15 },
   registerButton: {
     backgroundColor: "#c8c8c8",
     paddingVertical: 15,
@@ -454,30 +411,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 10,
     marginBottom: 5,
-    elevation: 3,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    ...baseShadow,
   },
-  registerButton2: {
-    backgroundColor: "#c8c8c8",
-    paddingVertical: 15,
-    borderRadius: 12,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 150,
-    marginBottom: 30,
-    elevation: 3,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-  },
-  registerButtonDisabled: {
-    backgroundColor: "#ccc",
-  },
+  registerButton2: { marginTop: 150, marginBottom: 30 },
+  registerButtonDisabled: { backgroundColor: "#ccc" },
   registerButtonText: {
     color: "#393939",
     fontSize: 16,
@@ -489,5 +426,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "#000",
     marginVertical: 30,
   },
+  cancelButton: { alignItems: "center", marginBottom: 14 },
+  cancelButtonText: { color: "#000", fontSize: 16, fontWeight: "bold" },
+  bottomContainer: { justifyContent: "flex-end", paddingHorizontal: 20 },
 });
-//codice ok
