@@ -8,28 +8,16 @@ import {
   Image,
 } from "react-native";
 import { commonStyles } from "../styles/commonStyles";
+import HeaderSection from "../components/HeaderSection2"; // ✅ IMPORTA HEADER
 
 export default function CommunicationScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
 
   return (
-    <View style={styles.container}>
+    <View style={commonStyles.container}>
       {/* Header superiore */}
-      <View style={commonStyles.header}>
-        <Text style={commonStyles.headerTitle}>
-          Protezione Civile | Regione Calabria
-        </Text>
-        <Image
-          source={require("../components/Logo.png")}
-          style={commonStyles.reportButtonImage}
-        />
-      </View>
-
-      {/* Header medio */}
-      <View style={commonStyles.headerMiddle}>
-        <Text style={commonStyles.headerTitle}>ProCiv Calabria</Text>
-      </View>
+      <HeaderSection />
 
       {/* Corpo */}
       <View style={styles.body}>
@@ -130,11 +118,6 @@ export default function CommunicationScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#F5F5F5",
-  },
-
   body: {
     flex: 1,
     paddingHorizontal: 16,
