@@ -89,14 +89,18 @@ export default function RegisterScreen({ navigation }) {
     }
   };
 
+  // ✅ FUNZIONE CORRETTA PER INVIO OTP
   const handleSendEmailOtp = async () => {
-    if (!formData.emailDiRegistrazione.trim()) {
+    const email = formData.emailDiRegistrazione.trim();
+
+    if (!email) {
       Alert.alert("Errore", "Inserisci un'email valida prima di procedere");
       return;
     }
 
     try {
       setLoading(true);
+
       const response = await fetch(
         "https://pc2.dev.schema31.it/api/users/contacts-verify/email/otp/send",
         {
@@ -105,13 +109,16 @@ export default function RegisterScreen({ navigation }) {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            email: formData.emailDiRegistrazione,
+            contact: email, // 👈 chiave corretta
           }),
         }
       );
 
+      const responseText = await response.text();
+      console.log("OTP response:", response.status, responseText);
+
       if (!response.ok) {
-        throw new Error("Errore durante l'invio dell'OTP");
+        throw new Error(`Errore durante l'invio dell'OTP (${response.status})`);
       }
 
       setEmailOtpSent(true);
@@ -394,7 +401,7 @@ const styles = StyleSheet.create({
   },
   cancelButton: {
     alignItems: "center",
-    marginBottom: 40,
+    marginBottom: 14,
   },
   cancelButtonText: {
     color: "#000",
@@ -483,3 +490,4 @@ const styles = StyleSheet.create({
     marginVertical: 30,
   },
 });
+//codice ok
