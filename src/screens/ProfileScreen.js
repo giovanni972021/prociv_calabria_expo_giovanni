@@ -9,7 +9,7 @@ import {
   Linking,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import { commonStyles } from "../styles/commonStyles";
+import { commonstyles } from "../styles/commonstyles";
 import { useNavigation } from "@react-navigation/native"; // Importa il hook useNavigation
 
 const CommunicationScreen = () => {
@@ -36,22 +36,22 @@ const CommunicationScreen = () => {
   };
 
   return (
-    <View style={commonStyles.container}>
+    <View style={commonstyles.container}>
       <>
         {/* Protezione Civile | Regione Calabria + foto */}
-        <View style={commonStyles.headerTop}>
-          <Text style={commonStyles.headerTitle}>
+        <View style={commonstyles.headerMiddle}>
+          <Text style={commonstyles.header2}>
             Protezione Civile | Regione Calabria
           </Text>
           <Image
             source={require("../components/Logo.png")}
-            style={commonStyles.reportButtonImage}
+            style={commonstyles.buttonReportImage}
           />
         </View>
 
         {/* Prociv Calabria + bottone segnala */}
-        <View style={commonStyles.headerMiddle}>
-          <Text style={commonStyles.headerTitle}>ProCiv Calabria</Text>
+        <View style={commonstyles.headerMiddle}>
+          <Text style={commonstyles.header2}>ProCiv Calabria</Text>
           {/* Icona di Logout */}
           <TouchableOpacity onPress={handleLogout}>
             <Icon name="sign-out-alt" size={24} color="white" />

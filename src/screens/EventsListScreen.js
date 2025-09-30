@@ -11,7 +11,7 @@ import {
   Image,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { commonStyles } from "../styles/commonStyles";
+import { commonstyles } from "../styles/commonstyles";
 import HeaderSection from "../components/HeaderSection"; // ✅ IMPORT HEADER
 
 export default function EventsListScreen({ navigation }) {
@@ -227,7 +227,7 @@ export default function EventsListScreen({ navigation }) {
   );
 
   return (
-    <View style={commonStyles.container}>
+    <View style={commonstyles.container}>
       {/* ✅ HEADER IMPORTATO */}
       <HeaderSection activeTab="Lista" />
 

@@ -14,11 +14,11 @@ EventsMapScreen.js – tutto ok ma capire come importare gli eventi da event lis
 
 .
 
-ForgotPasswordScreen.js – tutto ok, ma capire quale api richiamare quando utente clicca su continua ricomincia da qui , forgot password screen, vedi anche chat teams con gabriele orlando
+ForgotPasswordScreen.js – CODICE OTTIMIZZATO tutto ok, ma capire quale api richiamare quando utente clicca su continua ricomincia da qui , forgot password screen, vedi anche chat teams con gabriele orlando
 
 .
 
-TUTTO OK HomeScreen.js home screen
+TUTTO OK, codice GIA OTTIMIZZATO controllare che colori corrispondano HomeScreen.js home screen
 
 .
 

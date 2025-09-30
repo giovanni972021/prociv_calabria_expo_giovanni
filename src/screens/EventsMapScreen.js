@@ -12,7 +12,7 @@ import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import * as Location from "expo-location";
 import { eventsService } from "../services/api";
 import { CONFIG } from "../constants/config";
-import { commonStyles } from "../styles/commonStyles";
+import { commonstyles } from "../styles/commonstyles";
 import HeaderSection from "../components/HeaderSection"; // ✅ IMPORTA HEADER
 
 export default function EventsMapScreen({ navigation }) {
@@ -132,7 +132,7 @@ export default function EventsMapScreen({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={commonStyles.container}>
+    <SafeAreaView style={commonstyles.container}>
       {/* ✅ HEADER UNIFICATO */}
       <HeaderSection activeTab="Mappa" />
 

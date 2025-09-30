@@ -201,14 +201,14 @@ export default function RegisterScreen({ navigation }) {
           bounces={false}
           overScrollMode="never"
         >
-          <View style={styles.header}>
+          <View style={styles.headerMiddle}>
             <Text style={styles.title}>Registrati</Text>
-            <Text style={styles.subtitle}>
+            <Text style={styles.headerTestoNormale}>
               I campi contrassegnati da * sono obbligatori
             </Text>
           </View>
 
-          <View style={styles.form}>
+          <View style={styles.flex1}>
             {renderInput("Nome *", form.nome, "nome")}
             {renderInput("Cognome *", form.cognome, "cognome")}
             {renderInput(
@@ -264,7 +264,7 @@ export default function RegisterScreen({ navigation }) {
             </View>
 
             <View style={styles.horizontalLine} />
-            <Text style={styles.title2}>Email di registrazione *</Text>
+            <Text style={styles.header5}>Email di registrazione *</Text>
             {renderInput(
               "Email",
               form.emailDiRegistrazione,
@@ -315,7 +315,7 @@ export default function RegisterScreen({ navigation }) {
             )}
 
             <View style={styles.horizontalLine} />
-            <Text style={styles.title2}>Numero di cellulare</Text>
+            <Text style={styles.header5}>Numero di cellulare</Text>
             {renderInput(
               "Numero di cellulare",
               form.phoneNumber,
@@ -354,8 +354,8 @@ const styles = StyleSheet.create({
   scrollContent: { paddingHorizontal: 20, paddingVertical: 40 },
   header: { marginBottom: 30 },
   title: { fontSize: 28, fontWeight: "bold", color: "#333", marginBottom: 10 },
-  subtitle: { fontSize: 16, color: "#666", marginTop: 10 },
-  title2: {
+  headerTestoNormale: { fontSize: 16, color: "#666", marginTop: 10 },
+  header5: {
     fontSize: 20,
     color: "#666",
     marginBottom: 20,

@@ -1,51 +1,52 @@
-//tutto ok sia estetica sia funzionamento bottoni
 import {
   View,
   Text,
-  StyleSheet,
   TouchableOpacity,
   SafeAreaView,
   StatusBar,
 } from "react-native";
 
-import HeaderSection from "../components/HeaderSection2"; // ✅ IMPORTA HEADER
-import { commonStyles } from "../styles/commonStyles";
+import { commonstyles } from "../styles/commonstyles";
 
 export default function HomeScreen({ navigation }) {
   return (
     <>
       <StatusBar backgroundColor="#2563EB" barStyle="light-content" />
-      <SafeAreaView style={[commonStyles.container, styles.container]}>
-        <View style={styles.header}>
-          <Text style={[styles.titleCommon, styles.title2]}>Accesso</Text>
-          <Text style={[styles.titleCommon, styles.title]}>
+      <SafeAreaView style={[commonstyles.container, commonstyles.container2]}>
+        <View style={commonstyles.viewHomeScreen}>
+          <Text style={commonstyles.headerPiccolo}>Accesso</Text>
+          <Text style={commonstyles.headerGrande}>
             Accedi ai servizi di{"\n"}ProCiv Calabria
           </Text>
-          <Text style={styles.subtitle}>
+          <Text style={commonstyles.headerTestoNormale}>
             Seleziona la modalità di accesso che preferisci
           </Text>
         </View>
-        <View style={styles.content}>
+
+        <View>
           <TouchableOpacity
-            style={[styles.primaryButton, styles.button]}
+            style={[commonstyles.buttonAccessoBlu, commonstyles.button]}
             onPress={() => navigation.navigate("Login")}
           >
-            <Text style={styles.primaryButtonText}>
+            <Text style={commonstyles.headerButton}>
               Entra con le tue credenziali
             </Text>
           </TouchableOpacity>
+
           <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-            <Text style={[styles.linkText, styles.titleCommon]}>
+            <Text style={commonstyles.headerLink}>
               Non hai delle credenziali?
-              <Text style={styles.registerLink}> Registrati.</Text>
+              <Text style={commonstyles.headerLink2}> Registrati.</Text>
             </Text>
           </TouchableOpacity>
-          <View style={styles.horizontalLine}></View>
+
+          <View style={commonstyles.horizontalLine} />
+
           <TouchableOpacity
-            style={[styles.secondaryButton, styles.button]}
+            style={[commonstyles.button2, commonstyles.button]}
             onPress={() => navigation.navigate("Main")}
           >
-            <Text style={styles.primaryButtonText}>
+            <Text style={commonstyles.headerButton}>
               Entra in modalità anonima
             </Text>
           </TouchableOpacity>
@@ -54,61 +55,3 @@ export default function HomeScreen({ navigation }) {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 20,
-    paddingTop: 9,
-  },
-  header: { marginBottom: 30 },
-  titleCommon: {
-    color: "#1E3A8A",
-    fontWeight: "bold",
-  },
-  title: {
-    fontSize: 34,
-    textAlign: "left",
-  },
-  title2: {
-    fontSize: 20,
-    textAlign: "center",
-    marginVertical: 20,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: "#4B5563",
-    marginTop: 10,
-    textAlign: "left",
-  },
-  primaryButton: {
-    backgroundColor: "#2563EB",
-    marginBottom: 15,
-  },
-  primaryButtonText: { color: "#FFFFFF", fontSize: 16, fontWeight: "bold" },
-  linkText: {
-    fontSize: 16,
-    color: "#6B7280",
-    textAlign: "left",
-    marginTop: 7,
-    marginBottom: 20,
-  },
-  registerLink: {
-    color: "#2563EB",
-    fontWeight: "bold",
-  },
-  horizontalLine: {
-    borderBottomWidth: 2,
-    borderBottomColor: "#E5E7EB",
-    marginVertical: 10,
-    marginBottom: 20,
-  },
-  button: {
-    paddingVertical: 15,
-    borderRadius: 8,
-    alignItems: "center",
-  },
-  secondaryButton: {
-    backgroundColor: "#6B7280",
-  },
-});
-//tutto ok sia estetica sia funzionamento bottoni

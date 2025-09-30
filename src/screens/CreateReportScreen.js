@@ -254,16 +254,16 @@ export default function CreateReportScreen({ navigation }) {
       >
         <ScrollView contentContainerStyle={styles.scrollContent}>
           {/* Header */}
-          <View style={styles.header}>
+          <View style={styles.headerMiddle}>
             <Ionicons name="add-circle" size={60} color="#FF6B35" />
             <Text style={styles.title}>Nuova Segnalazione</Text>
-            <Text style={styles.subtitle}>
+            <Text style={styles.headerTestoNormale}>
               Descrivi la situazione di emergenza
             </Text>
           </View>
 
           {/* Form */}
-          <View style={styles.form}>
+          <View style={styles.flex1}>
             {/* Titolo */}
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Titolo della segnalazione *</Text>
@@ -475,7 +475,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginBottom: 10,
   },
-  subtitle: {
+  headerTestoNormale: {
     fontSize: 16,
     color: "#666",
     textAlign: "center",

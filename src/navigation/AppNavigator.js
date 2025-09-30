@@ -130,7 +130,7 @@ export default function AppNavigator() {
             backgroundColor: "#FF6B35",
           },
           headerTintColor: "#fff",
-          headerTitleStyle: {
+          header2Style: {
             fontWeight: "bold",
           },
         }}

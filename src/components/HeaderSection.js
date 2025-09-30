@@ -1,7 +1,7 @@
 // components/HeaderSection.js
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
-import { commonStyles } from "../styles/commonStyles"; // Assicurati che esista
+import { commonstyles } from "../styles/commonstyles"; // Assicurati che esista
 import { useNavigation } from "@react-navigation/native";
 
 const HeaderSection = ({ activeTab = "Lista" }) => {
@@ -10,50 +10,50 @@ const HeaderSection = ({ activeTab = "Lista" }) => {
   return (
     <>
       {/* Protezione Civile | Regione Calabria + foto */}
-      <View style={commonStyles.headerTop}>
-        <Text style={commonStyles.headerTitle}>
+      <View style={commonstyles.headerMiddle}>
+        <Text style={commonstyles.header2}>
           Protezione Civile | Regione Calabria
         </Text>
         <Image
           source={require("../components/Logo.png")}
-          style={commonStyles.reportButtonImage}
+          style={commonstyles.buttonReportImage}
         />
       </View>
 
       {/* Prociv Calabria + bottone segnala */}
-      <View style={commonStyles.headerMiddle}>
-        <Text style={commonStyles.headerTitle}>ProCiv Calabria</Text>
+      <View style={commonstyles.headerMiddle}>
+        <Text style={commonstyles.header2}>ProCiv Calabria</Text>
         <TouchableOpacity
           onPress={() => navigation.navigate("CreateReportScreen")}
-          style={commonStyles.reportButton}
+          style={commonstyles.buttonReport}
         >
-          <Text style={commonStyles.reportButtonText}>Segnala</Text>
+          <Text style={commonstyles.headerButton}>Segnala</Text>
         </TouchableOpacity>
       </View>
 
       {/* Tab Mappa / Lista */}
-      <View style={commonStyles.tabContainer}>
+      <View style={commonstyles.containerTab}>
         <TouchableOpacity
-          style={commonStyles.tab}
+          style={commonstyles.tab}
           onPress={() => navigation.navigate("EventsMapScreen")}
         >
           <Text
             style={[
-              commonStyles.tabText,
-              activeTab === "Mappa" && commonStyles.activeTabText,
+              commonstyles.headerTab,
+              activeTab === "Mappa" && commonstyles.headerTabActive,
             ]}
           >
             Mappa
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={commonStyles.tab}
+          style={commonstyles.tab}
           onPress={() => navigation.navigate("EventsListScreen")}
         >
           <Text
             style={[
-              commonStyles.tabText,
-              activeTab === "Lista" && commonStyles.activeTabText,
+              commonstyles.headerTab,
+              activeTab === "Lista" && commonstyles.headerTabActive,
             ]}
           >
             Lista

@@ -1,37 +1,143 @@
-//barre in alto protezione civile regione calabria e logo e Prociv calabria
 import { StyleSheet } from "react-native";
 
-export const commonStyles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#f8f9fa", marginTop: 20 },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+export const commonstyles = StyleSheet.create({
+  button: {
+    paddingVertical: 15,
+    borderRadius: 8,
     alignItems: "center",
-    backgroundColor: "#0091D6",
-    paddingHorizontal: 15,
-    paddingVertical: 10,
   },
-  tab: {
-    flex: 1,
+  button2: {
+    backgroundColor: "#6B7280",
+  },
+  loginButton: {
+    backgroundColor: "#1E3A8A",
+    paddingVertical: 15,
+    borderRadius: 12,
     flexDirection: "row",
+    alignItems: "center",
     justifyContent: "center",
-    alignItems: "center",
-    paddingVertical: 10,
+    marginBottom: 20,
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  loginButtonDisabled: {
+    backgroundColor: "#ccc",
+  },
+  cancelButton: {
+    backgroundColor: "#fff",
+    borderWidth: 1,
+    borderColor: "black",
+  },
+  cancelButtonPressed: {
+    backgroundColor: "#e0e0e0",
+  },
+  cancelButtonText: {
+    color: "#1E3A8A",
+    fontWeight: "bold",
   },
 
-  headerTop: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: "#0091D6",
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+  loginButtonText: {
+    color: "#fff",
+    paddingBottom: 10,
+    fontSize: 16,
   },
 
-  reportButtonImage: {
+  buttonAccessoBlu: {
+    backgroundColor: "#2563EB",
+    marginBottom: 15,
+  },
+  buttonReport: {
+    backgroundColor: "#FF6B35",
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 5,
+    borderColor: "white",
+    borderWidth: 3,
+  },
+  buttonReportImage: {
     width: 50,
     height: 50,
     resizeMode: "contain",
+  },
+  cancelButtonPressed: {
+    backgroundColor: "#e0e0e0",
+  },
+  container: { flex: 1, backgroundColor: "#f8f9fa", marginTop: 20 },
+  container2: {
+    paddingHorizontal: 20,
+    paddingTop: 9,
+  },
+  container3: {
+    flex: 1,
+    backgroundColor: "#f8f9fa",
+  },
+  bottomContainer: {
+    justifyContent: "flex-end",
+    paddingHorizontal: 20,
+  },
+
+  containerTab: {
+    flexDirection: "row",
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
+  },
+  forgotContainer: {
+    marginBottom: 20,
+    alignItems: "center",
+  },
+  commonText: {
+    fontSize: 16,
+    color: "#333",
+  },
+
+  inputContainer: {
+    marginBottom: 20,
+  },
+  inputContainer2: { marginBottom: 20, marginTop: 20 },
+
+  forgotText: {
+    ...this?.commonText,
+    fontSize: 16,
+  },
+  forgotText2: {
+    ...this?.commonText,
+    color: "#0037ceff",
+    fontWeight: "600",
+  },
+  flex1: {
+    flex: 1,
+  },
+  header2: { color: "white", fontSize: 16 },
+  header5: {
+    fontSize: 20,
+    textAlign: "center",
+    marginVertical: 20,
+  },
+  headerButton: { color: "#FFFFFF", fontSize: 16, fontWeight: "bold" },
+  header99: {
+    marginBottom: 40,
+    paddingTop: 10,
+  },
+
+  headerGrande: {
+    color: "#1E3A8A",
+    fontWeight: "bold",
+    fontSize: 34,
+    textAlign: "left",
+  },
+  headerLink: {
+    fontSize: 16,
+    color: "#6B7280",
+    textAlign: "left",
+    marginTop: 7,
+    marginBottom: 20,
+  },
+  headerLink2: {
+    color: "#2563EB",
+    fontWeight: "bold",
   },
   headerMiddle: {
     flexDirection: "row",
@@ -41,42 +147,91 @@ export const commonStyles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 10,
   },
-  reportButton: {
-    backgroundColor: "#FF6B35",
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 5,
-    borderColor: "white",
-    borderWidth: 3,
-  },
-  reportButtonText: {
-    color: "#fff",
-    fontSize: 16,
+  headerPiccolo: {
+    color: "#1E3A8A",
     fontWeight: "bold",
+    fontSize: 20,
+    textAlign: "center",
+    marginVertical: 20,
   },
-
-  tabContainer: {
-    flexDirection: "row",
-    borderBottomWidth: 1,
-    borderBottomColor: "#ddd",
-  },
-  tabText: {
+  headerTab: {
     marginLeft: 8,
     color: "#666",
     paddingVertical: 10,
     paddingHorizontal: 15,
   },
-  activeTabText: {
+  headerTabActive: {
     color: "blue",
     fontWeight: "bold",
   },
-  titolo1: {
-    color: "#1E3A8A",
-    fontWeight: "bold",
-    fontSize: 34,
-    textAlign: "center",
+  headerTestoNormale: {
+    fontSize: 16,
+    color: "#4B5563",
     marginTop: 10,
+    textAlign: "left",
   },
-  reportButtonImage: { width: 50, height: 50, resizeMode: "contain" },
-  headerTitle: { color: "white", fontSize: 16 },
+  headerTestoNormale2: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#1E3A8A",
+    textAlign: "center",
+    marginBottom: 8,
+    marginTop: 20,
+  },
+  headerTestoNormale3: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#1E3A8A",
+    textAlign: "center",
+    marginBottom: 8,
+  },
+
+  horizontalLine: {
+    borderBottomWidth: 2,
+    borderBottomColor: "#E5E7EB",
+    marginVertical: 10,
+    marginBottom: 20,
+  },
+  commonInput: {
+    fontSize: 16,
+    color: "#333",
+    borderBottomColor: "#333",
+  },
+
+  input: {
+    height: 50,
+    borderBottomWidth: 2,
+    paddingBottom: 10,
+    paddingHorizontal: 0,
+  },
+  label: {
+    fontWeight: "600",
+  },
+  passwordInput: {
+    flex: 1,
+    paddingVertical: 0,
+  },
+  passwordContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderBottomWidth: 2,
+    height: 55,
+  },
+  eyeIconContainer: {
+    paddingBottom: 4,
+  },
+
+  scrollContent: {
+    flexGrow: 1,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+  },
+  tab: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 10,
+  },
+  viewHomeScreen: { marginBottom: 30 },
 });
