@@ -4,7 +4,6 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
   SafeAreaView,
   Alert,
   ActivityIndicator,
@@ -13,7 +12,8 @@ import {
   ScrollView,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { authService } from "../services/api"; // Assuming you have api services
+import { commonstyles } from "../styles/commonstyles";
+import { CONFIG, getBaseUrl } from "../constants/config";
 
 export default function RegisterScreen({ navigation }) {
   const [loading, setLoading] = useState(false);
@@ -32,7 +32,8 @@ export default function RegisterScreen({ navigation }) {
     sesso: "",
   });
 
-  const update = (f, v) => setForm((p) => ({ ...p, [f]: v }));
+  const update = (field, value) =>
+    setForm((prev) => ({ ...prev, [field]: value }));
 
   const isValid = () => {
     const {
@@ -68,10 +69,12 @@ export default function RegisterScreen({ navigation }) {
         birthDate: form.birthDate.toISOString(),
         sesso: form.sesso,
       });
+
       Alert.alert("Registrazione completata", "Account creato con successo", [
         { text: "Vai al Login", onPress: () => navigation.navigate("Login") },
       ]);
-    } catch {
+    } catch (error) {
+      console.error(error);
       Alert.alert("Errore", "Registrazione fallita");
     } finally {
       setLoading(false);
@@ -89,7 +92,7 @@ export default function RegisterScreen({ navigation }) {
     setLoading(true);
     try {
       const res = await fetch(
-        "https://pc2.dev.schema31.it/api/users/contacts-verify/email/otp/send",
+        `${getBaseUrl()}${CONFIG.ENDPOINTS.VERIFY_EMAIL}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -97,20 +100,19 @@ export default function RegisterScreen({ navigation }) {
         }
       );
 
-      const data = await res.json();
-
       if (!res.ok) {
-        console.log("Errore dal server:", data); // 👈 Log utile
-        throw new Error(data.message || "Errore invio OTP");
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Errore durante invio OTP");
       }
 
       setOtpSent(true);
-      setTimer(480); // Start 8 minute timer
-
-      Alert.alert("Email inviata", "Controlla la tua email");
+      setTimer(600);
+      Alert.alert("Email inviata", "Controlla la tua email per il codice OTP");
     } catch (error) {
-      console.log("Errore durante fetch OTP:", error); // 👈 Logga l'errore completo
-      Alert.alert("Errore", error.message || "Invio codice fallito");
+      console.error("Errore in handleSendOtp:", error);
+      Alert.alert("Errore", error.message || "Errore durante invio codice");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -121,7 +123,7 @@ export default function RegisterScreen({ navigation }) {
     setLoading(true);
     try {
       const res = await fetch(
-        "https://pc2.dev.schema31.it/api/users/contacts-verify/email/otp/verify",
+        `${getBaseUrl()}${CONFIG.ENDPOINTS.EMAIL_OTP_CONTROL}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -134,11 +136,15 @@ export default function RegisterScreen({ navigation }) {
 
       const data = await res.json();
       if (res.ok && data.verified) {
-        Alert.alert("Successo", "Email verificata");
+        Alert.alert("Successo", "La mail è stata verificata correttamente");
+        setOtpSent(false);
+        setOtp("");
+        setTimer(0);
       } else {
         Alert.alert("Errore", "Codice OTP non valido o scaduto");
       }
-    } catch {
+    } catch (error) {
+      console.error(error);
       Alert.alert("Errore", "Verifica fallita");
     } finally {
       setLoading(false);
@@ -154,30 +160,37 @@ export default function RegisterScreen({ navigation }) {
     return () => clearInterval(interval);
   }, [timer]);
 
-  const formatTime = (s) =>
-    `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(
-      2,
-      "0"
-    )}`;
+  const formatTime = (seconds) => {
+    const min = String(Math.floor(seconds / 60)).padStart(2, "0");
+    const sec = String(seconds % 60).padStart(2, "0");
+    return `${min}:${sec}`;
+  };
 
-  const renderInput = (label, value, key, extra = {}) => (
-    <View style={styles.inputContainer}>
-      <Text style={styles.label}>{label}</Text>
+  const renderInput = (label, value, key, placeholder, extra = {}) => (
+    <View style={commonstyles.a1514inputContainer} key={key}>
+      <Text style={commonstyles.a1514label}>{label}</Text>
       <TextInput
-        style={styles.input}
+        style={[commonstyles.a1514input, commonstyles.commonInput]}
         value={value}
-        onChangeText={(t) => update(key, t)}
+        onChangeText={(text) => update(key, text)}
+        placeholder={placeholder}
         {...extra}
       />
     </View>
   );
 
-  const renderBtn = (label, onPress, extraStyle = {}, disabled = false) => (
+  const renderBtn = (
+    label,
+    onPress,
+    extraStyle = {},
+    disabled = false,
+    textStyle = {}
+  ) => (
     <TouchableOpacity
       style={[
-        styles.registerButton,
+        commonstyles.a1514registerButton,
         extraStyle,
-        (loading || disabled) && styles.registerButtonDisabled,
+        (loading || disabled) && commonstyles.a1514registerButtonDisabled,
       ]}
       onPress={onPress}
       disabled={loading || disabled}
@@ -185,44 +198,49 @@ export default function RegisterScreen({ navigation }) {
       {loading ? (
         <ActivityIndicator color="#fff" />
       ) : (
-        <Text style={styles.registerButtonText}>{label}</Text>
+        <Text style={[commonstyles.a1514registerButtonText, textStyle]}>
+          {label}
+        </Text>
       )}
     </TouchableOpacity>
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={commonstyles.container3}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.keyboardView}
+        style={commonstyles.a1514keyboardView}
       >
         <ScrollView
-          contentContainerStyle={styles.scrollContent}
+          contentContainerStyle={commonstyles.a1514scrollContent}
           bounces={false}
           overScrollMode="never"
         >
-          <View style={styles.headerMiddle}>
-            <Text style={styles.title}>Registrati</Text>
-            <Text style={styles.headerTestoNormale}>
+          <View style={commonstyles.a1514headerMiddle}>
+            <Text style={commonstyles.a1514title}>Registrati</Text>
+            <Text style={commonstyles.a1514headerTestoNormale}>
               I campi contrassegnati da * sono obbligatori
             </Text>
           </View>
 
-          <View style={styles.flex1}>
-            {renderInput("Nome *", form.nome, "nome")}
-            {renderInput("Cognome *", form.cognome, "cognome")}
+          <View style={commonstyles.a1514flex1}>
+            {renderInput("Nome *", form.nome, "nome", "Nome")}
+            {renderInput("Cognome *", form.cognome, "cognome", "Cognome")}
             {renderInput(
               "Codice Fiscale *",
               form.codiceFiscale,
               "codiceFiscale",
+              "Codice Fiscale",
               { maxLength: 16 }
             )}
 
             <TouchableOpacity
-              style={styles.dateButton}
+              style={commonstyles.a1514dateButton}
               onPress={() => setShowPicker(true)}
             >
-              <Text style={styles.dateButtonText}>Data di Nascita</Text>
+              <Text style={commonstyles.a1514dateButtonText}>
+                Data di Nascita
+              </Text>
             </TouchableOpacity>
 
             {showPicker && (
@@ -237,48 +255,63 @@ export default function RegisterScreen({ navigation }) {
               />
             )}
             {form.birthDate && (
-              <Text style={styles.selectedDateText}>
+              <Text style={commonstyles.a1514selectedDateText}>
                 {form.birthDate.toLocaleDateString()}
               </Text>
             )}
 
-            <View style={styles.sessoContainer}>
-              <Text style={styles.label}>Sesso *</Text>
-              <View style={styles.sessoOptions}>
+            <View style={commonstyles.a1514sessoContainer}>
+              <Text style={commonstyles.a1514label}>Sesso *</Text>
+              <View style={commonstyles.a1514sessoOptions}>
                 {["Maschio", "Femmina"].map((opt) => (
                   <TouchableOpacity
                     key={opt}
-                    style={styles.radioButton}
+                    style={commonstyles.a1514radioButton}
                     onPress={() => update("sesso", opt)}
                   >
                     <View
                       style={[
-                        styles.radioCircle,
-                        form.sesso === opt && styles.selectedCircle,
+                        commonstyles.a1514radioCircle,
+                        form.sesso === opt && commonstyles.a1514selectedCircle,
                       ]}
                     />
-                    <Text style={styles.radioText}>{opt}</Text>
+                    <Text style={commonstyles.a1514radioText}>{opt}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
             </View>
 
-            <View style={styles.horizontalLine} />
-            <Text style={styles.header5}>Email di registrazione *</Text>
-            {renderInput(
-              "Email",
-              form.emailDiRegistrazione,
-              "emailDiRegistrazione",
-              {
-                keyboardType: "email-address",
-                autoCapitalize: "none",
-                onChangeText: (t) => {
-                  update("emailDiRegistrazione", t);
-                  setOtpSent(false);
-                  setOtp("");
-                  setTimer(0);
-                },
-              }
+            <View style={commonstyles.a1514horizontalLine} />
+            <Text style={commonstyles.a1514header5}>
+              Email di registrazione *
+            </Text>
+
+            {otpSent ? (
+              <View style={commonstyles.a1514emailReadonlyContainer}>
+                <Text style={commonstyles.a1514emailReadonlyText}>
+                  {form.emailDiRegistrazione}
+                </Text>
+                <Text style={commonstyles.commonText3}>
+                  La mail è stata verificata correttamente
+                </Text>
+              </View>
+            ) : (
+              renderInput(
+                "Email di registrazione *",
+                form.emailDiRegistrazione,
+                "emailDiRegistrazione",
+                "email@esempio.com",
+                {
+                  keyboardType: "email-address",
+                  autoCapitalize: "none",
+                  onChangeText: (text) => {
+                    update("emailDiRegistrazione", text);
+                    setOtpSent(false);
+                    setOtp("");
+                    setTimer(0);
+                  },
+                }
+              )
             )}
 
             {otpSent ? (
@@ -294,11 +327,19 @@ export default function RegisterScreen({ navigation }) {
                   {},
                   timer > 0
                 )}
-                <Text>Non hai ricevuto il codice? Attendi</Text>
-                <Text>Digita il codice ricevuto via mail e fai tap su</Text>
-                <Text>"Verifica codice email"</Text>
-                <Text>entro {formatTime(timer)}</Text>
-                {renderInput("Digita codice email *", otp, "", {
+                <Text style={commonstyles.commonText3}>
+                  Non hai ricevuto il codice? Attendi
+                </Text>
+                <Text style={commonstyles.commonText3}>
+                  Digita il codice ricevuto via mail e fai tap su
+                </Text>
+                <Text style={commonstyles.commonText3}>
+                  "Verifica codice email"
+                </Text>
+                <Text style={commonstyles.commonText}>
+                  entro {formatTime(timer)}
+                </Text>
+                {renderInput("Digita codice email", otp, "otp", "******", {
                   keyboardType: "number-pad",
                   maxLength: 6,
                   onChangeText: setOtp,
@@ -314,23 +355,31 @@ export default function RegisterScreen({ navigation }) {
               renderBtn("Verifica email", handleSendOtp)
             )}
 
-            <View style={styles.horizontalLine} />
-            <Text style={styles.header5}>Numero di cellulare</Text>
+            <View style={commonstyles.a1514horizontalLine} />
+            <Text style={commonstyles.a1514header5}>Numero di cellulare</Text>
             {renderInput(
               "Numero di cellulare",
               form.phoneNumber,
               "phoneNumber",
+              "Numero di cellulare",
               { keyboardType: "phone-pad" }
             )}
-            {renderBtn("Verifica numero")}
-            {renderBtn("Procedi", handleRegister, styles.registerButton2)}
 
-            <View style={styles.bottomContainer}>
+            {renderBtn("Verifica numero")}
+            {renderBtn(
+              "Procedi",
+              handleRegister,
+              commonstyles.a1514registerButton2
+            )}
+
+            <View style={commonstyles.a1514bottomContainer}>
               <TouchableOpacity
                 onPress={() => navigation.goBack()}
-                style={styles.cancelButton}
+                style={commonstyles.a1514cancelButton}
               >
-                <Text style={styles.cancelButtonText}>Annulla</Text>
+                <Text style={commonstyles.a151415cancelButtonText}>
+                  Annulla
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -339,94 +388,3 @@ export default function RegisterScreen({ navigation }) {
     </SafeAreaView>
   );
 }
-
-const baseShadow = {
-  elevation: 3,
-  shadowColor: "#000",
-  shadowOffset: { width: 0, height: 2 },
-  shadowOpacity: 0.25,
-  shadowRadius: 3.84,
-};
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#f8f9fa" },
-  keyboardView: { flex: 1 },
-  scrollContent: { paddingHorizontal: 20, paddingVertical: 40 },
-  header: { marginBottom: 30 },
-  title: { fontSize: 28, fontWeight: "bold", color: "#333", marginBottom: 10 },
-  headerTestoNormale: { fontSize: 16, color: "#666", marginTop: 10 },
-  header5: {
-    fontSize: 20,
-    color: "#666",
-    marginBottom: 20,
-    textAlign: "center",
-  },
-  form: { flex: 1 },
-  label: { fontSize: 16, fontWeight: "600", color: "#333" },
-  inputContainer: { marginBottom: 10 },
-  input: {
-    height: 50,
-    fontSize: 16,
-    color: "#333",
-    borderBottomWidth: 2,
-    borderBottomColor: "#333",
-    marginBottom: 20,
-  },
-  dateButton: {
-    backgroundColor: "#28a745",
-    paddingVertical: 12,
-    paddingHorizontal: 25,
-    borderRadius: 12,
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 20,
-    alignSelf: "center",
-  },
-  dateButtonText: { color: "#fff", fontSize: 16, fontWeight: "600" },
-  selectedDateText: {
-    fontSize: 24,
-    color: "#1E3A8A",
-    textAlign: "center",
-    marginBottom: 10,
-  },
-  sessoContainer: { marginBottom: 10 },
-  sessoOptions: { flexDirection: "column", justifyContent: "space-between" },
-  radioButton: { flexDirection: "row", alignItems: "center", marginBottom: 10 },
-  radioCircle: {
-    height: 20,
-    width: 20,
-    borderRadius: 10,
-    borderWidth: 2,
-    borderColor: "#333",
-    marginRight: 10,
-  },
-  selectedCircle: { backgroundColor: "#28a745" },
-  radioText: { fontSize: 16, color: "#333", paddingVertical: 15 },
-  registerButton: {
-    backgroundColor: "#c8c8c8",
-    paddingVertical: 15,
-    borderRadius: 12,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 10,
-    marginBottom: 5,
-    ...baseShadow,
-  },
-  registerButton2: { marginTop: 150, marginBottom: 30 },
-  registerButtonDisabled: { backgroundColor: "#ccc" },
-  registerButtonText: {
-    color: "#393939",
-    fontSize: 16,
-    fontWeight: "bold",
-    marginLeft: 8,
-  },
-  horizontalLine: {
-    borderBottomWidth: 1,
-    borderBottomColor: "#000",
-    marginVertical: 30,
-  },
-  cancelButton: { alignItems: "center", marginBottom: 14 },
-  cancelButtonText: { color: "#000", fontSize: 16, fontWeight: "bold" },
-  bottomContainer: { justifyContent: "flex-end", paddingHorizontal: 20 },
-});

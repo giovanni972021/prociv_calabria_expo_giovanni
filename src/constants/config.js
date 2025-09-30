@@ -14,6 +14,7 @@ export const CONFIG = {
     EVENTS_VIEW: "/api/events",
     EVENTS_UPDATE: "/api/events",
     FORGOT_PASSWORD: "/api/users/underscoreuser/reset-password",
+    EMAIL_OTP_CONTROL: "/api/users/contacts-verify/email/otp/verify",
   },
 
   // Credenziali di test

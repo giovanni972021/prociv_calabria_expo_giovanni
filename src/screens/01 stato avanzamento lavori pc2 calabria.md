@@ -31,7 +31,6 @@ login funziona correttamente , login screem
 
 DA TERMINARE ProfileScreen.js ricomincia da qui, profile screen, manca icona, stile da terminare, controllare tendina dati utente
 .
-DA TERMINARE , postman ogni cinque secondi mi restituisce errore "Error:getaddrinfo ENOTFOUND pc2.dev.schema31.it
-" RegisterScreen.js da terminare , register screen ricomincia da qui, controllare funzionamento verifica password e verifica telefono,
+DA TERMINARE , register screen js , registerscreenjs, correggi colore pulsante modifica mail e richiedi nuovo codice, capire perche quando inserisco codice otp in app non funge, elimina effetto scrolling fastidioso
 .
 TUTTO OK MA... WeatherBulletinScreen.js weather bulletin screen, tutto ok, ma perche quando clicco su link parte download automatico? da app play store questo non accade, dipende da me o da link php? ricomincia da qui
