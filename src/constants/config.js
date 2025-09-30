@@ -13,12 +13,13 @@ export const CONFIG = {
     EVENTS_CREATE: "/api/events",
     EVENTS_VIEW: "/api/events",
     EVENTS_UPDATE: "/api/events",
+    FORGOT_PASSWORD: "/api/users/underscoreuser/reset-password",
   },
 
   // Credenziali di test
   TEST_CREDENTIALS: {
-    fiscalCode: "LLNRBL80A01G273E",
-    password: "89411809",
+    fiscalCode: "CPNGNN97R30H501J",
+    password: "40120208",
   },
 
   // URL esterni

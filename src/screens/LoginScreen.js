@@ -51,7 +51,7 @@ const LoginScreen = ({ navigation }) => {
       }
     } catch (error) {
       console.error("🔐 Login error:", error);
-      if (fiscalCode.trim() === "LLNRBL80A01G273E" && password === "89411809") {
+      if (fiscalCode.trim() === "CPNGNN97R30H501J" && password === "89411809") {
         const mockResponse = {
           ok: true,
           name: "Utente Demo",
@@ -113,7 +113,7 @@ const LoginScreen = ({ navigation }) => {
 
             <TouchableOpacity
               onPress={() => {
-                setFiscalCode("LLNRBL80A01G273E");
+                setFiscalCode("CPNGNN97R30H501J");
                 setPassword("89411809");
               }}
             />
@@ -122,9 +122,9 @@ const LoginScreen = ({ navigation }) => {
               <TouchableOpacity
                 onPress={() => navigation.navigate("ForgotPasswordScreen")}
               >
-                <Text style={commonstyles.forgotText}>
+                <Text style={commonstyles.commonText}>
                   Hai dimenticato le{" "}
-                  <Text style={commonstyles.forgotText2}>credenziali?</Text>
+                  <Text style={commonstyles.commonText2}>credenziali?</Text>
                 </Text>
               </TouchableOpacity>
             </View>
@@ -159,6 +159,7 @@ const InputField = ({ label, value, onChange, maxLength }) => (
       autoCapitalize="none"
       maxLength={maxLength}
       autoCorrect={false}
+      placeholder="Nome utente"
     />
   </View>
 );
@@ -182,6 +183,7 @@ const PasswordField = ({
         autoCapitalize="none"
         maxLength={maxLength}
         autoCorrect={false}
+        placeholder="Password"
       />
       <TouchableOpacity
         onPress={toggleVisibility}

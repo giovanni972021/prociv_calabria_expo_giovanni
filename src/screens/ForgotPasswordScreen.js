@@ -9,13 +9,59 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Alert,
 } from "react-native";
 import { commonstyles } from "../styles/commonstyles";
+import { getBaseUrl, CONFIG } from "../constants/config";
 
-const LoginScreen = ({ navigation }) => {
+const ForgotPasswordScreen = ({ navigation }) => {
   const [fiscalCode, setFiscalCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [isPressed, setIsPressed] = useState(false);
+
+  const handleContinue = async () => {
+    const cf = fiscalCode.toUpperCase();
+    if (!/^[A-Z0-9]{16}$/.test(cf)) {
+      Alert.alert(
+        "Errore",
+        "Inserisci un codice fiscale valido (16 caratteri alfanumerici)."
+      );
+      return;
+    }
+
+    setLoading(true);
+    setIsPressed(true);
+
+    try {
+      const res = await fetch(
+        `${getBaseUrl()}${CONFIG.ENDPOINTS.FORGOT_PASSWORD}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ Anagraphics: { FiscalCode: cf } }),
+        }
+      );
+      const data = await res.json();
+
+      res.ok
+        ? Alert.alert(
+            "",
+            "Le credenziali sono state inviate all'indirizzo email dell'utente.",
+            [{ text: "Ok", onPress: () => setIsPressed(false) }]
+          )
+        : Alert.alert(
+            "Errore",
+            data?.message ||
+              data?.error ||
+              `Errore ${res.status}` ||
+              "Errore generico."
+          );
+    } catch {
+      Alert.alert("Errore", "Errore di rete. Controlla la connessione.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <SafeAreaView style={commonstyles.container3}>
@@ -24,12 +70,9 @@ const LoginScreen = ({ navigation }) => {
         style={commonstyles.flex1}
       >
         <ScrollView contentContainerStyle={commonstyles.scrollContent}>
-          <View>
-            <Text style={commonstyles.headerTestoNormale3}>
-              Recupera password
-            </Text>
-          </View>
-
+          <Text style={commonstyles.headerTestoNormale3}>
+            Recupera password
+          </Text>
           <InputField
             label="Nome Utente"
             value={fiscalCode}
@@ -39,7 +82,7 @@ const LoginScreen = ({ navigation }) => {
         </ScrollView>
 
         <View style={commonstyles.bottomContainer}>
-          <Button onPress={() => {}} loading={loading} text="Continua" />
+          <Button onPress={handleContinue} loading={loading} text="Continua" />
           <Button
             onPress={() => navigation.navigate("Login")}
             loading={loading}
@@ -61,8 +104,9 @@ const InputField = ({ label, value, onChange, ...props }) => (
       style={[commonstyles.input, commonstyles.commonInput]}
       value={value}
       onChangeText={onChange}
-      autoCapitalize="none"
+      autoCapitalize="characters"
       autoCorrect={false}
+      placeholder="Nome utente"
       {...props}
     />
   </View>
@@ -105,4 +149,4 @@ const Button = ({
   </TouchableOpacity>
 );
 
-export default LoginScreen;
+export default ForgotPasswordScreen;

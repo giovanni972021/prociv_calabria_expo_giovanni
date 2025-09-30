@@ -33,11 +33,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 10,
   },
-  buttonReportImage: {
-    width: 50,
-    height: 50,
-    resizeMode: "contain",
-  },
+
   webview: {
     flex: 1, // Occupa lo spazio rimanente
   },

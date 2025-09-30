@@ -138,7 +138,7 @@ export default function EventsMapScreen({ navigation }) {
 
       <MapView
         provider={PROVIDER_GOOGLE}
-        style={styles.map}
+        style={commonstyles.flex1}
         region={region}
         onRegionChangeComplete={setRegion}
         showsUserLocation={true}
@@ -170,9 +170,6 @@ export default function EventsMapScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  map: {
-    flex: 1,
-  },
   loadingOverlay: {
     position: "absolute",
     top: 0,

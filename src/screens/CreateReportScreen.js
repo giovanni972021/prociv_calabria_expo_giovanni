@@ -19,6 +19,7 @@ import * as ImagePicker from "expo-image-picker";
 import MapView, { Marker } from "react-native-maps";
 import { eventsService } from "../services/api";
 import { authUtils } from "../utils/auth";
+import { commonstyles } from "../styles/commonstyles";
 
 export default function CreateReportScreen({ navigation }) {
   const [formData, setFormData] = useState({
@@ -250,7 +251,7 @@ export default function CreateReportScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.keyboardView}
+        style={commonstyles.flex1}
       >
         <ScrollView contentContainerStyle={styles.scrollContent}>
           {/* Header */}
@@ -265,7 +266,7 @@ export default function CreateReportScreen({ navigation }) {
           {/* Form */}
           <View style={styles.flex1}>
             {/* Titolo */}
-            <View style={styles.inputContainer}>
+            <View style={commonstyles.inputContainer}>
               <Text style={styles.label}>Titolo della segnalazione *</Text>
               <TextInput
                 style={styles.input}
@@ -372,7 +373,7 @@ export default function CreateReportScreen({ navigation }) {
                 <Text style={styles.label}>Posizione</Text>
                 <View style={styles.mapContainer}>
                   <MapView
-                    style={styles.map}
+                    style={commonstyles.flex1}
                     region={location}
                     scrollEnabled={false}
                     zoomEnabled={false}
@@ -456,9 +457,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#f8f9fa",
   },
-  keyboardView: {
-    flex: 1,
-  },
+
   scrollContent: {
     flexGrow: 1,
     paddingHorizontal: 20,
@@ -480,12 +479,7 @@ const styles = StyleSheet.create({
     color: "#666",
     textAlign: "center",
   },
-  form: {
-    flex: 1,
-  },
-  inputContainer: {
-    marginBottom: 20,
-  },
+
   label: {
     fontSize: 16,
     fontWeight: "600",
@@ -561,9 +555,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ddd",
   },
-  map: {
-    flex: 1,
-  },
+
   imageContainer: {
     flexDirection: "row",
     gap: 10,

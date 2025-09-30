@@ -62,9 +62,7 @@ export const commonstyles = StyleSheet.create({
     height: 50,
     resizeMode: "contain",
   },
-  cancelButtonPressed: {
-    backgroundColor: "#e0e0e0",
-  },
+
   container: { flex: 1, backgroundColor: "#f8f9fa", marginTop: 20 },
   container2: {
     paddingHorizontal: 20,
@@ -92,21 +90,17 @@ export const commonstyles = StyleSheet.create({
     fontSize: 16,
     color: "#333",
   },
+  commonText2: {
+    fontSize: 16,
+    color: "blue",
+    fontWeight: "bold",
+  },
 
   inputContainer: {
     marginBottom: 20,
   },
   inputContainer2: { marginBottom: 20, marginTop: 20 },
 
-  forgotText: {
-    ...this?.commonText,
-    fontSize: 16,
-  },
-  forgotText2: {
-    ...this?.commonText,
-    color: "#0037ceff",
-    fontWeight: "600",
-  },
   flex1: {
     flex: 1,
   },
@@ -193,9 +187,10 @@ export const commonstyles = StyleSheet.create({
     marginBottom: 20,
   },
   commonInput: {
-    fontSize: 16,
+    fontSize: 20,
     color: "#333",
     borderBottomColor: "#333",
+    fontWeight: "bold",
   },
 
   input: {

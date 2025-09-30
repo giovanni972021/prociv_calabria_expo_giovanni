@@ -14,7 +14,7 @@ EventsMapScreen.js – tutto ok ma capire come importare gli eventi da event lis
 
 .
 
-ForgotPasswordScreen.js – CODICE OTTIMIZZATO tutto ok, ma capire quale api richiamare quando utente clicca su continua ricomincia da qui , forgot password screen, vedi anche chat teams con gabriele orlando
+ForgotPasswordScreen.js – CODICE OTTIMIZZATO , capire come far apparire "ok" di rosso quando utente clicca su continua, il resto tutto ok
 
 .
 
@@ -23,7 +23,7 @@ TUTTO OK, codice GIA OTTIMIZZATO controllare che colori corrispondano HomeScreen
 .
 
 LoginScreen.js tutto ok entrando con credenziali
-LLNRBL80A01G273E
+CPNGNN97R30H501J
 89411809
 login funziona correttamente , login screem
 
