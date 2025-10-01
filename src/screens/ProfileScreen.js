@@ -86,19 +86,19 @@ const CommunicationScreen = () => {
           </View>
         )}
 
-        {renderMenuItem("Profili attivi")}
+        {renderMenuItem("Profili")}
         {renderMenuItem("Sito Internet", () =>
-          openURL("https://www.regione.calabria.it")
+          openURL("https://www.protezionecivilecalabria.it/")
         )}
         {renderMenuItem("Informativa Privacy", () =>
-          openURL("https://protezionecivilecalabria.it/privacy")
+          openURL("https://www.protezionecivilecalabria.it/?page_id=314")
         )}
-        {renderMenuItem("Contattaci", () =>
-          openURL("https://protezionecivilecalabria.it/contatti")
+        {renderMenuItem("Contatti", () =>
+          openURL("https://www.protezionecivilecalabria.it/?page_id=317")
         )}
 
         <TouchableOpacity onPress={handleInfoClick} style={styles.menuItem}>
-          <Text style={styles.menuText}>Info</Text>
+          <Text style={styles.menuText}>About</Text>
           <Icon
             name={showInfo ? "chevron-down" : "chevron-right"}
             size={16}
