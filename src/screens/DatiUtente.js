@@ -10,15 +10,16 @@ import {
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { commonstyles } from "../styles/commonstyles";
 import { useNavigation } from "@react-navigation/native";
-import HeaderSection from "../components/HeaderSection2"; // ✅ IMPORTA HEADER
+import HeaderSection1 from "../components/HeaderSection1"; // ✅ IMPORTA HEADER
+import HeaderSection1b from "../components/Headersection1b"; // ✅ IMPORTA HEADER
 
 const DatiUtenteScreen = () => {
   const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
-      <HeaderSection />
-
+      <HeaderSection1 />.
+      <HeaderSection1b />
       {/* Sezione dati utente */}
       <View style={styles.userDataContainer}>
         <Text style={styles.title}>Dati utente</Text>

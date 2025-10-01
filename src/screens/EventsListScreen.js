@@ -12,7 +12,9 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { commonstyles } from "../styles/commonstyles";
-import HeaderSection from "../components/HeaderSection"; // ✅ IMPORT HEADER
+import HeaderSection1 from "../components/HeaderSection1"; // ✅ IMPORTA HEADER
+import HeaderSection1b from "../components/Headersection1b"; // ✅ IMPORTA HEADER
+import HeaderSection1c from "../components/HeaderSection1c"; // ✅ IMPORTA HEADER
 
 export default function EventsListScreen({ navigation }) {
   const [events, setEvents] = useState([]);
@@ -229,7 +231,10 @@ export default function EventsListScreen({ navigation }) {
   return (
     <View style={commonstyles.container}>
       {/* ✅ HEADER IMPORTATO */}
-      <HeaderSection activeTab="Lista" />
+      <HeaderSection1 />
+      <HeaderSection1b />
+
+      <HeaderSection1c activeTab="Lista" />
 
       {/* Dropdown "Eventi / Le mie Segnalazioni" */}
       <View style={styles.dropdownContainer}>

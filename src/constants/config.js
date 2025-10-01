@@ -20,7 +20,7 @@ export const CONFIG = {
   // Credenziali di test
   TEST_CREDENTIALS: {
     fiscalCode: "CPNGNN97R30H501J",
-    password: "40120208",
+    password: "52577953",
   },
 
   // URL esterni

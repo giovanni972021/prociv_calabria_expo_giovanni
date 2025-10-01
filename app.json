@@ -1,24 +1,22 @@
 {
   "expo": {
-    "name": "ProtezioneCivileCalabria",
-    "slug": "ProtezioneCivileCalabria",
-    "version": "1.0.0",
+    "name": "ProCiv Calabria",
+    "slug": "ProCiv Calabria",
+    "version": "1.0.0", //versione applicazione
     "orientation": "portrait",
-    "icon": "./src/components/Logo.png",
+    "icon": "./src/components/logo.webp",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./src/components/Logo.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "image": "./src/components/logo.webp",
+      "resizeMode": "contain"
     },
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./src/components/Logo.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./src/components/logo.webp"
       },
       "edgeToEdgeEnabled": true
     },

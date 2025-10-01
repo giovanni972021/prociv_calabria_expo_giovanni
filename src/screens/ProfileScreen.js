@@ -10,6 +10,8 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { commonstyles } from "../styles/commonstyles";
+import HeaderSection1 from "../components/HeaderSection1";
+
 import { useNavigation } from "@react-navigation/native"; // Importa il hook useNavigation
 
 const CommunicationScreen = () => {
@@ -38,16 +40,7 @@ const CommunicationScreen = () => {
   return (
     <View style={commonstyles.container}>
       <>
-        {/* Protezione Civile | Regione Calabria + foto */}
-        <View style={commonstyles.headerMiddle}>
-          <Text style={commonstyles.header2}>
-            Protezione Civile | Regione Calabria
-          </Text>
-          <Image
-            source={require("../components/Logo.png")}
-            style={commonstyles.buttonReportImage}
-          />
-        </View>
+        <HeaderSection1 />
 
         {/* Prociv Calabria + bottone segnala */}
         <View style={commonstyles.headerMiddle}>

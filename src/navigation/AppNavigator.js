@@ -167,6 +167,11 @@ export default function AppNavigator() {
           options={{ title: "Registrati", headerShown: false }}
         />
         <Stack.Screen
+          name="EventsMapScreen"
+          component={EventsMapScreen}
+          options={{ title: "Mappa Eventi", headerShown: false }}
+        />
+        <Stack.Screen
           name="Main"
           component={MainTabNavigator}
           options={{ headerShown: false }}

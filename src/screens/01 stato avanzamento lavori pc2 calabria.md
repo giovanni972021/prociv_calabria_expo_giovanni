@@ -21,10 +21,9 @@ ForgotPasswordScreen.js – CODICE OTTIMIZZATO , capire come far apparire "ok" d
 TUTTO OK, codice GIA OTTIMIZZATO controllare che colori corrispondano HomeScreen.js home screen
 
 .
-
 LoginScreen.js tutto ok entrando con credenziali
 CPNGNN97R30H501J
-89411809
+52577953
 login funziona correttamente , login screem
 
 .
@@ -38,8 +37,8 @@ TUTTO OK MA... WeatherBulletinScreen.js weather bulletin screen, tutto ok, ma pe
 .
 ricomincia da qui
 .
-nome applicazione quando apro si deve chiamare ProCiv Calabria (nome che appare sotto foto)
-anche ombra dietro logo da levare
+FATTO nome applicazione quando apro si deve chiamare ProCiv Calabria (nome che appare sotto foto)
+ricomincia da qui rimane staccatura tra foto e sfondo anche ombra dietro logo da levare
 vedi app per identificare colori dopo aver fatto foto
 .
 quando clicco su mongolfierina della mappa deve aprire pop up come quando clicco su
@@ -82,3 +81,7 @@ Account
   quando utente entra modalita anonima vedi app play store ma Profili attivi è profili come normale idem about anziche info , resto uguale
   .
   pagina crea segnalazione vedi con claudia
+  .
+  .
+  ricomincia da qui sistema accesso in anonimo
+  controlla che tutti header section siano ok e che siano corretti, cosi facendo posso gestire meglio mod anonima

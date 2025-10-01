@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   Alert,
   ActivityIndicator,
   SafeAreaView,
@@ -13,18 +12,25 @@ import * as Location from "expo-location";
 import { eventsService } from "../services/api";
 import { CONFIG } from "../constants/config";
 import { commonstyles } from "../styles/commonstyles";
-import HeaderSection from "../components/HeaderSection"; // ✅ IMPORTA HEADER
+import HeaderSection1 from "../components/HeaderSection1";
+import HeaderSection1b from "../components/Headersection1b";
+import HeaderSection1c from "../components/HeaderSection1c";
 
-export default function EventsMapScreen({ navigation }) {
+export default function EventsMapScreen({ navigation, route }) {
+  const { anonymous } = route.params || {};
+
   const [region, setRegion] = useState(CONFIG.MAP_CONFIG.INITIAL_REGION);
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [userLocation, setUserLocation] = useState(null);
-  const [showMyReports, setShowMyReports] = useState(false);
 
   useEffect(() => {
     requestLocationPermission();
-    loadEvents();
+    if (!anonymous) {
+      loadEvents();
+    } else {
+      setLoading(false); // Ferma il loader se anonimo
+    }
   }, []);
 
   const requestLocationPermission = async () => {
@@ -37,7 +43,12 @@ export default function EventsMapScreen({ navigation }) {
           longitude: location.coords.longitude,
         });
 
-        if (isInCalabria(location.coords.latitude, location.coords.longitude)) {
+        if (
+          location.coords.latitude >= 37.9 &&
+          location.coords.latitude <= 40.2 &&
+          location.coords.longitude >= 15.6 &&
+          location.coords.longitude <= 17.2
+        ) {
           setRegion({
             latitude: location.coords.latitude,
             longitude: location.coords.longitude,
@@ -51,20 +62,10 @@ export default function EventsMapScreen({ navigation }) {
     }
   };
 
-  const isInCalabria = (latitude, longitude) => {
-    return (
-      latitude >= 37.9 &&
-      latitude <= 40.2 &&
-      longitude >= 15.6 &&
-      longitude <= 17.2
-    );
-  };
-
   const loadEvents = async () => {
     setLoading(true);
     try {
-      // const response = await eventsService.findEvents({ status: "open", isPublic: true });
-
+      // Simula eventi mockati. Sostituisci con API reale se serve.
       const mockEvents = [
         {
           id: "1",
@@ -73,8 +74,6 @@ export default function EventsMapScreen({ navigation }) {
           latitude: 39.3081,
           longitude: 16.2539,
           type: "flood",
-          status: "open",
-          createdAt: new Date().toISOString(),
         },
         {
           id: "2",
@@ -83,8 +82,6 @@ export default function EventsMapScreen({ navigation }) {
           latitude: 39.2081,
           longitude: 16.3539,
           type: "landslide",
-          status: "open",
-          createdAt: new Date().toISOString(),
         },
         {
           id: "3",
@@ -93,8 +90,6 @@ export default function EventsMapScreen({ navigation }) {
           latitude: 39.4081,
           longitude: 16.1539,
           type: "fire",
-          status: "open",
-          createdAt: new Date().toISOString(),
         },
       ];
 
@@ -133,8 +128,10 @@ export default function EventsMapScreen({ navigation }) {
 
   return (
     <SafeAreaView style={commonstyles.container}>
-      {/* ✅ HEADER UNIFICATO */}
-      <HeaderSection activeTab="Mappa" />
+      {/* ✅ Header unificato */}
+      <HeaderSection1 />
+      <HeaderSection1b />
+      <HeaderSection1c activeTab="Mappa" />
 
       <MapView
         provider={PROVIDER_GOOGLE}
@@ -142,23 +139,25 @@ export default function EventsMapScreen({ navigation }) {
         region={region}
         onRegionChangeComplete={setRegion}
         showsUserLocation={true}
-        showsMyLocationButton={true}
+        showsMyLocationButton={!anonymous} // 👈 disattiva il pulsante se anonimo
       >
-        {events.map((event) => (
-          <Marker
-            key={event.id}
-            coordinate={{
-              latitude: event.latitude,
-              longitude: event.longitude,
-            }}
-            title={event.title}
-            description={event.description}
-            pinColor={getMarkerColor(event.type)}
-            onPress={() => handleMarkerPress(event)}
-          />
-        ))}
+        {!anonymous &&
+          events.map((event) => (
+            <Marker
+              key={event.id}
+              coordinate={{
+                latitude: event.latitude,
+                longitude: event.longitude,
+              }}
+              title={event.title}
+              description={event.description}
+              pinColor={getMarkerColor(event.type)}
+              onPress={() => handleMarkerPress(event)}
+            />
+          ))}
       </MapView>
 
+      {/* Mostra loader solo se carica eventi */}
       {loading && (
         <View style={styles.loadingOverlay}>
           <ActivityIndicator size="large" color="#FF6B35" />
@@ -184,5 +183,18 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 16,
     color: "#333",
+  },
+  anonymousBanner: {
+    position: "absolute",
+    top: 60,
+    alignSelf: "center",
+    backgroundColor: "#FF6B35",
+    padding: 10,
+    borderRadius: 8,
+    elevation: 2,
+  },
+  anonymousText: {
+    color: "#fff",
+    fontWeight: "bold",
   },
 });

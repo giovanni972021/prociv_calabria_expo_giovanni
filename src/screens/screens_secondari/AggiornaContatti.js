@@ -8,7 +8,8 @@ import {
   Image,
 } from "react-native";
 import { commonstyles } from "../styles/commonstyles";
-import HeaderSection from "../components/HeaderSection2"; // ✅ IMPORTA HEADER
+import HeaderSection1 from "../components/HeaderSection1"; // ✅ IMPORTA HEADER
+import HeaderSection1b2 from "../components/HeaderSection1b2"; // ✅ IMPORTA HEADER
 
 export default function CommunicationScreen({ navigation }) {
   const [email, setEmail] = useState("");
@@ -17,7 +18,8 @@ export default function CommunicationScreen({ navigation }) {
   return (
     <View style={commonstyles.container}>
       {/* Header superiore */}
-      <HeaderSection />
+      <HeaderSection1 />
+      <HeaderSection1b2 />
 
       {/* Corpo */}
       <View style={styles.body}>

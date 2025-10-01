@@ -9,28 +9,6 @@ const HeaderSection = ({ activeTab = "Lista" }) => {
 
   return (
     <>
-      {/* Protezione Civile | Regione Calabria + foto */}
-      <View style={commonstyles.headerMiddle}>
-        <Text style={commonstyles.header2}>
-          Protezione Civile | Regione Calabria
-        </Text>
-        <Image
-          source={require("../components/Logo.png")}
-          style={commonstyles.buttonReportImage}
-        />
-      </View>
-
-      {/* Prociv Calabria + bottone segnala */}
-      <View style={commonstyles.headerMiddle}>
-        <Text style={commonstyles.header2}>ProCiv Calabria</Text>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("CreateReportScreen")}
-          style={commonstyles.buttonReport}
-        >
-          <Text style={commonstyles.headerButton}>Segnala</Text>
-        </TouchableOpacity>
-      </View>
-
       {/* Tab Mappa / Lista */}
       <View style={commonstyles.containerTab}>
         <TouchableOpacity
