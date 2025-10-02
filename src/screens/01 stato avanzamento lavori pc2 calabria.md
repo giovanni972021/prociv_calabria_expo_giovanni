@@ -74,6 +74,7 @@ Account
   tutti i pulsanti dove non ce altro nella pagina metterli tutto in basso come home page
   pulsante indietro schermata about esteticamente uguale a pulsante annulla schermata dati utente
   .
+  correggi icona logout schermata profilo
   quando utente clicca su freccia per fare logout deve apparire pop up vedi foto "logout profilo"
   quando accedo con modalita anonima NON devo vedere pulsante segnala
   .
@@ -84,4 +85,3 @@ Account
   .
   .
   ricomincia da qui sistema accesso in anonimo
-  controlla che tutti header section siano ok e che siano corretti, cosi facendo posso gestire meglio mod anonima

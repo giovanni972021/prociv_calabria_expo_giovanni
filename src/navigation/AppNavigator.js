@@ -36,20 +36,29 @@ function ProfiloStackScreen() {
   );
 }
 
-function EventiStackScreen() {
+function EventiStackScreen({ route }) {
+  const anonymous = route.params?.anonymous || false;
+
   return (
     <ProfiloStack.Navigator screenOptions={{ headerShown: false }}>
-      <ProfiloStack.Screen name="EventsMapScreen" component={EventsMapScreen} />
+      <ProfiloStack.Screen
+        name="EventsMapScreen"
+        component={EventsMapScreen}
+        initialParams={{ anonymous }}
+      />
       <ProfiloStack.Screen
         name="EventsListScreen"
         component={EventsListScreen}
+        initialParams={{ anonymous }} //passa modalita anonima alla schermata event list screen
       />
     </ProfiloStack.Navigator>
   );
 }
 
 // Tab navigator principale
-function MainTabNavigator() {
+function MainTabNavigator({ route }) {
+  const anonymous = route.params?.anonymous || false;
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -77,6 +86,7 @@ function MainTabNavigator() {
       <Tab.Screen
         name="Mappa"
         component={EventiStackScreen}
+        initialParams={{ anonymous }} //passa modalita anonima alla schermata mappa
         options={{
           title: "Eventi",
           headerShown: false,

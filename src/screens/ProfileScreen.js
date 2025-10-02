@@ -5,27 +5,20 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
-  Image,
   Linking,
+  Modal,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { commonstyles } from "../styles/commonstyles";
 import HeaderSection1 from "../components/HeaderSection1";
-
-import { useNavigation } from "@react-navigation/native"; // Importa il hook useNavigation
+import { useNavigation } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons"; // o altra famiglia di icone
 
 const CommunicationScreen = () => {
   const [showInfo, setShowInfo] = useState(false);
-  const [showUserData, setShowUserData] = useState(false); // State to manage user data dropdown
-  const navigation = useNavigation(); // Inizializza il navigatore
-
-  const handleInfoClick = () => {
-    setShowInfo(!showInfo);
-  };
-
-  const handleUserDataClick = () => {
-    setShowUserData(!showUserData); // Toggle dropdown visibility
-  };
+  const [showUserData, setShowUserData] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const navigation = useNavigation();
 
   const openURL = (url) => {
     Linking.openURL(url).catch((err) =>
@@ -33,27 +26,21 @@ const CommunicationScreen = () => {
     );
   };
 
-  const handleLogout = () => {
-    navigation.replace("Home"); // Use replace to prevent going back to the previous screen
-  };
-
   return (
     <View style={commonstyles.container}>
-      <>
-        <HeaderSection1 />
-
-        {/* Prociv Calabria + bottone segnala */}
-        <View style={commonstyles.headerMiddle}>
-          <Text style={commonstyles.header2}>ProCiv Calabria</Text>
-          {/* Icona di Logout */}
-          <TouchableOpacity onPress={handleLogout}>
-            <Icon name="sign-out-alt" size={24} color="white" />
-          </TouchableOpacity>
-        </View>
-      </>
+      <HeaderSection1 />
+      <View style={commonstyles.headerMiddle}>
+        <Text style={commonstyles.header2}>ProCiv Calabria</Text>
+        <TouchableOpacity onPress={() => setShowModal(true)}>
+          <Ionicons name="log-out-outline" size={24} color="white" />
+        </TouchableOpacity>
+      </View>
 
       <ScrollView style={styles.menuItemsContainer}>
-        <TouchableOpacity onPress={handleUserDataClick} style={styles.menuItem}>
+        <TouchableOpacity
+          onPress={() => setShowUserData(!showUserData)}
+          style={styles.menuItem}
+        >
           <Text style={styles.menuText}>Dati utente</Text>
           <Icon
             name={showUserData ? "chevron-down" : "chevron-right"}
@@ -62,18 +49,12 @@ const CommunicationScreen = () => {
           />
         </TouchableOpacity>
 
-        {/* Render dropdown menu for "Dati utente" */}
         {showUserData && (
           <View style={styles.dropdownMenu}>
             <TouchableOpacity onPress={() => navigation.navigate("DatiUtente")}>
               <Text style={styles.menuText}>Dati utente</Text>
             </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => {
-                /* logica per eliminare utente */
-              }}
-            >
+            <TouchableOpacity onPress={() => {}}>
               <Text style={styles.menuText}>Elimina utente</Text>
             </TouchableOpacity>
           </View>
@@ -90,7 +71,10 @@ const CommunicationScreen = () => {
           openURL("https://www.protezionecivilecalabria.it/?page_id=317")
         )}
 
-        <TouchableOpacity onPress={handleInfoClick} style={styles.menuItem}>
+        <TouchableOpacity
+          onPress={() => setShowInfo(!showInfo)}
+          style={styles.menuItem}
+        >
           <Text style={styles.menuText}>About</Text>
           <Icon
             name={showInfo ? "chevron-down" : "chevron-right"}
@@ -110,9 +94,8 @@ const CommunicationScreen = () => {
               e la partecipazione.{"\n\n"}
               Versione numero: 1.0.22
             </Text>
-
             <TouchableOpacity
-              onPress={handleInfoClick}
+              onPress={() => setShowInfo(false)}
               style={styles.backButton}
             >
               <Text style={styles.backButtonText}>Indietro</Text>
@@ -120,6 +103,40 @@ const CommunicationScreen = () => {
           </View>
         )}
       </ScrollView>
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={showModal}
+        onRequestClose={() => setShowModal(false)}
+      >
+        <View style={styles.modalBackground}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>
+              Sei sicuro di voler effettuare il logout?
+            </Text>
+            <View style={styles.modalButtonsRow}>
+              <TouchableOpacity
+                onPress={() => {
+                  setShowModal(false);
+                }}
+                style={styles.modalButton}
+              >
+                <Text style={styles.modalButtonText}>Annulla</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  setShowModal(false);
+                  navigation.navigate("Home");
+                }}
+                style={styles.modalButton}
+              >
+                <Text style={styles.modalButtonText2}>Logout</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -155,8 +172,7 @@ const styles = StyleSheet.create({
   },
   dropdownMenu: {
     paddingLeft: 20,
-    paddingTop: 10,
-    paddingBottom: 10,
+    paddingVertical: 10,
     backgroundColor: "#F5F5F5",
   },
   infoTextContainer: {
@@ -179,6 +195,38 @@ const styles = StyleSheet.create({
   backButtonText: {
     color: "white",
     fontSize: 14,
+  },
+  modalBackground: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContainer: {
+    width: "80%",
+    padding: 20,
+    backgroundColor: "white",
+  },
+  modalTitle: {
+    fontSize: 16,
+    color: "#333333",
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  modalButtonsRow: {
+    flexDirection: "row",
+  },
+  modalButton: {
+    marginHorizontal: 10,
+    paddingVertical: 12,
+  },
+  modalButtonText: {
+    fontSize: 16,
+    color: "black",
+  },
+  modalButtonText2: {
+    fontSize: 16,
+    color: "red",
   },
 });
 

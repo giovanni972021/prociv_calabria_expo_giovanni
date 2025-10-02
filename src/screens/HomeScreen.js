@@ -44,9 +44,7 @@ export default function HomeScreen({ navigation }) {
 
           <TouchableOpacity
             style={[commonstyles.button2, commonstyles.button]}
-            onPress={() =>
-              navigation.replace("EventsMapScreen", { anonymous: true })
-            }
+            onPress={() => navigation.replace("Main", { anonymous: true })}
           >
             <Text style={commonstyles.headerButton}>
               Entra in modalità anonima

@@ -9,14 +9,15 @@ import {
 } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import * as Location from "expo-location";
-import { eventsService } from "../services/api";
 import { CONFIG } from "../constants/config";
 import { commonstyles } from "../styles/commonstyles";
 import HeaderSection1 from "../components/HeaderSection1";
 import HeaderSection1b from "../components/Headersection1b";
+import HeaderSection1b2 from "../components/Headersection1b2";
+
 import HeaderSection1c from "../components/HeaderSection1c";
 
-export default function EventsMapScreen({ navigation, route }) {
+export default function EventsMapScreen({ route }) {
   const { anonymous } = route.params || {};
 
   const [region, setRegion] = useState(CONFIG.MAP_CONFIG.INITIAL_REGION);
@@ -25,48 +26,35 @@ export default function EventsMapScreen({ navigation, route }) {
   const [userLocation, setUserLocation] = useState(null);
 
   useEffect(() => {
-    requestLocationPermission();
-    if (!anonymous) {
-      loadEvents();
-    } else {
-      setLoading(false); // Ferma il loader se anonimo
-    }
-  }, []);
-
-  const requestLocationPermission = async () => {
-    try {
+    (async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status === "granted") {
         const location = await Location.getCurrentPositionAsync({});
-        setUserLocation({
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
-        });
-
+        const { latitude, longitude } = location.coords;
+        setUserLocation({ latitude, longitude });
         if (
-          location.coords.latitude >= 37.9 &&
-          location.coords.latitude <= 40.2 &&
-          location.coords.longitude >= 15.6 &&
-          location.coords.longitude <= 17.2
+          latitude >= 37.9 &&
+          latitude <= 40.2 &&
+          longitude >= 15.6 &&
+          longitude <= 17.2
         ) {
           setRegion({
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
+            latitude,
+            longitude,
             latitudeDelta: 0.1,
             longitudeDelta: 0.1,
           });
         }
       }
-    } catch (error) {
-      console.error("Errore geolocalizzazione:", error);
-    }
-  };
+      if (!anonymous) await loadEvents();
+      else setLoading(false);
+    })();
+  }, []);
 
   const loadEvents = async () => {
     setLoading(true);
     try {
-      // Simula eventi mockati. Sostituisci con API reale se serve.
-      const mockEvents = [
+      setEvents([
         {
           id: "1",
           title: "Allagamento Strada Provinciale",
@@ -91,46 +79,36 @@ export default function EventsMapScreen({ navigation, route }) {
           longitude: 16.1539,
           type: "fire",
         },
-      ];
-
-      setEvents(mockEvents);
-    } catch (error) {
-      console.error("Errore caricamento Eventi:", error);
+      ]);
+    } catch {
       Alert.alert("Errore", "Impossibile caricare gli Eventi");
     } finally {
       setLoading(false);
     }
   };
 
-  const getMarkerColor = (eventType) => {
-    switch (eventType) {
-      case "flood":
-        return "#000000ff";
-      case "landslide":
-        return "#FF9500";
-      case "fire":
-        return "#FF3B30";
-      default:
-        return "#FF6B35";
-    }
-  };
+  const getMarkerColor = (type) =>
+    type === "flood"
+      ? "#000000ff"
+      : type === "landslide"
+      ? "#FF9500"
+      : type === "fire"
+      ? "#FF3B30"
+      : "#FF6B35";
 
-  const handleMarkerPress = (event) => {
+  const handleMarkerPress = (event) =>
     Alert.alert(event.title, event.description, [
       { text: "Chiudi", style: "cancel" },
-      { text: "Dettagli", onPress: () => showEventDetails(event) },
+      {
+        text: "Dettagli",
+        onPress: () => console.log("Mostra dettagli evento:", event),
+      },
     ]);
-  };
-
-  const showEventDetails = (event) => {
-    console.log("Mostra dettagli evento:", event);
-  };
 
   return (
     <SafeAreaView style={commonstyles.container}>
-      {/* ✅ Header unificato */}
       <HeaderSection1 />
-      <HeaderSection1b />
+      {anonymous ? <HeaderSection1b2 /> : <HeaderSection1b />}
       <HeaderSection1c activeTab="Mappa" />
 
       <MapView
@@ -138,8 +116,8 @@ export default function EventsMapScreen({ navigation, route }) {
         style={commonstyles.flex1}
         region={region}
         onRegionChangeComplete={setRegion}
-        showsUserLocation={true}
-        showsMyLocationButton={!anonymous} // 👈 disattiva il pulsante se anonimo
+        showsUserLocation
+        showsMyLocationButton={!anonymous}
       >
         {!anonymous &&
           events.map((event) => (
@@ -157,7 +135,6 @@ export default function EventsMapScreen({ navigation, route }) {
           ))}
       </MapView>
 
-      {/* Mostra loader solo se carica eventi */}
       {loading && (
         <View style={styles.loadingOverlay}>
           <ActivityIndicator size="large" color="#FF6B35" />
@@ -183,18 +160,5 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 16,
     color: "#333",
-  },
-  anonymousBanner: {
-    position: "absolute",
-    top: 60,
-    alignSelf: "center",
-    backgroundColor: "#FF6B35",
-    padding: 10,
-    borderRadius: 8,
-    elevation: 2,
-  },
-  anonymousText: {
-    color: "#fff",
-    fontWeight: "bold",
   },
 });
