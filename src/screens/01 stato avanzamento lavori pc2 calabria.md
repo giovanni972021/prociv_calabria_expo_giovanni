@@ -67,15 +67,13 @@ Account
   Piattaforma ProCiv (PC2) > link pc2
   Informativa Privacy
   Contatti
-  About (allinea il testo, anziche 1.0.22 metti versione app dinamica chiedi a gabriele orlando teams)
+  controlla icone barra in basso se corrette
+  chiedi a gabriele orlando api da importare dentro schermata comunicazioni
   .
   sotto schermata about separata da pagina profilo vedi cartella foto "about profilo".
   .
   tutti i pulsanti dove non ce altro nella pagina metterli tutto in basso come home page
-  pulsante indietro schermata about esteticamente uguale a pulsante annulla schermata dati utente
   .
-  correggi icona logout schermata profilo
-  quando utente clicca su freccia per fare logout deve apparire pop up vedi foto "logout profilo"
   quando accedo con modalita anonima NON devo vedere pulsante segnala
   .
   segnalazioni abilitate solo se telefono autenticato e validato e posizione calabria

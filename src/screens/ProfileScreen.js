@@ -15,6 +15,16 @@ import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons"; // o altra famiglia di icone
 
 const CommunicationScreen = () => {
+  const renderMenuItem = (title, onPress) => (
+    <TouchableOpacity
+      onPress={onPress}
+      disabled={!onPress}
+      style={styles.menuItem}
+    >
+      <Text style={styles.menuText}>{title}</Text>
+      <Icon name="chevron-right" size={16} color="#0091D6" />
+    </TouchableOpacity>
+  );
   const [showInfo, setShowInfo] = useState(false);
   const [showUserData, setShowUserData] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -72,7 +82,7 @@ const CommunicationScreen = () => {
         )}
 
         <TouchableOpacity
-          onPress={() => setShowInfo(!showInfo)}
+          onPress={() => navigation.navigate("ProfileAbout")}
           style={styles.menuItem}
         >
           <Text style={styles.menuText}>About</Text>
@@ -82,26 +92,6 @@ const CommunicationScreen = () => {
             color="#0091D6"
           />
         </TouchableOpacity>
-
-        {showInfo && (
-          <View style={styles.infoTextContainer}>
-            <Text style={styles.infoText}>
-              ProCiv Calabria è l'applicazione della Protezione Civile della
-              Regione Calabria che permette al cittadino e all'operatore di
-              essere informato e di effettuare segnalazioni sugli eventi
-              emergenziali (incendi, frane, ecc...) che interessano il
-              territorio, al fine di migliorare e semplificare la comunicazione
-              e la partecipazione.{"\n\n"}
-              Versione numero: 1.0.22
-            </Text>
-            <TouchableOpacity
-              onPress={() => setShowInfo(false)}
-              style={styles.backButton}
-            >
-              <Text style={styles.backButtonText}>Indietro</Text>
-            </TouchableOpacity>
-          </View>
-        )}
       </ScrollView>
 
       <Modal
@@ -141,17 +131,6 @@ const CommunicationScreen = () => {
   );
 };
 
-const renderMenuItem = (title, onPress) => (
-  <TouchableOpacity
-    onPress={onPress}
-    disabled={!onPress}
-    style={styles.menuItem}
-  >
-    <Text style={styles.menuText}>{title}</Text>
-    <Icon name="chevron-right" size={16} color="#0091D6" />
-  </TouchableOpacity>
-);
-
 const styles = StyleSheet.create({
   menuItemsContainer: {
     marginTop: 20,
@@ -184,17 +163,22 @@ const styles = StyleSheet.create({
     color: "#333333",
     lineHeight: 20,
   },
+
   backButton: {
     marginTop: 10,
-    alignSelf: "flex-start",
-    backgroundColor: "#0091D6",
+
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderRadius: 4,
+    backgroundColor: "white",
+    borderWidth: 1,
+    borderColor: "#bdbdbdff",
   },
   backButtonText: {
-    color: "white",
-    fontSize: 14,
+    color: "#222",
+    fontWeight: "bold",
+    fontSize: 16,
+    textAlign: "center",
   },
   modalBackground: {
     flex: 1,

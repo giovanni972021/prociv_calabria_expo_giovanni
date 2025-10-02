@@ -111,6 +111,8 @@ export const commonstyles = StyleSheet.create({
     flex: 1,
   },
   header2: { color: "white", fontSize: 16 },
+  header3: { color: "white", fontWeight: "bold", fontSize: 16 },
+
   header5: {
     fontSize: 20,
     textAlign: "center",

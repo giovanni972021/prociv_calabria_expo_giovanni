@@ -5,6 +5,8 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 
 // Import delle schermate
+import ProfileAbout from "../screens/ProfileAbout";
+
 import DatiUtente from "../screens/DatiUtente";
 import HomeScreen from "../screens/HomeScreen";
 import LoginScreen from "../screens/LoginScreen";
@@ -28,6 +30,8 @@ function ProfiloStackScreen() {
     <ProfiloStack.Navigator screenOptions={{ headerShown: false }}>
       <ProfiloStack.Screen name="ProfileScreen" component={ProfileScreen} />
       <ProfiloStack.Screen name="DatiUtente" component={DatiUtente} />
+      <ProfiloStack.Screen name="ProfileAbout" component={ProfileAbout} />
+
       <ProfiloStack.Screen
         name="AggiornaContatti"
         component={AggiornaContatti}

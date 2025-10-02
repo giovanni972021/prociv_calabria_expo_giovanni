@@ -9,7 +9,7 @@ const HeaderSection = ({ activeTab = "Lista" }) => {
   return (
     <>
       <View style={commonstyles.headerMiddle}>
-        <Text style={commonstyles.header2}>ProCiv Calabria</Text>
+        <Text style={commonstyles.header3}>ProCiv Calabria</Text>
       </View>
     </>
   );
