@@ -11,7 +11,7 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import { commonstyles } from "../styles/commonstyles";
 import { useNavigation } from "@react-navigation/native";
 import HeaderSection1 from "../components/HeaderSection1"; // ✅ IMPORTA HEADER
-import HeaderSection1b from "../components/Headersection1b"; // ✅ IMPORTA HEADER
+import HeaderSection1b2 from "../components/Headersection1b2"; // ✅ IMPORTA HEADER
 
 const DatiUtenteScreen = () => {
   const navigation = useNavigation();
@@ -19,7 +19,7 @@ const DatiUtenteScreen = () => {
   return (
     <View style={styles.container}>
       <HeaderSection1 />.
-      <HeaderSection1b />
+      <HeaderSection1b2 />
       {/* Sezione dati utente */}
       <View style={styles.userDataContainer}>
         <Text style={styles.title}>Dati utente</Text>

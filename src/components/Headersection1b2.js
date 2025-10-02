@@ -8,7 +8,6 @@ const HeaderSection = ({ activeTab = "Lista" }) => {
 
   return (
     <>
-      {/* Prociv Calabria + bottone segnala */}
       <View style={commonstyles.headerMiddle}>
         <Text style={commonstyles.header2}>ProCiv Calabria</Text>
       </View>
