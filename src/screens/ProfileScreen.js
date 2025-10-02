@@ -12,19 +12,10 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import { commonstyles } from "../styles/commonstyles";
 import HeaderSection1 from "../components/HeaderSection1";
 import { useNavigation } from "@react-navigation/native";
-import { Ionicons } from "@expo/vector-icons"; // o altra famiglia di icone
+import { Ionicons } from "@expo/vector-icons"; // or another icon family
 
-const CommunicationScreen = () => {
-  const renderMenuItem = (title, onPress) => (
-    <TouchableOpacity
-      onPress={onPress}
-      disabled={!onPress}
-      style={styles.menuItem}
-    >
-      <Text style={styles.menuText}>{title}</Text>
-      <Icon name="chevron-right" size={16} color="#0091D6" />
-    </TouchableOpacity>
-  );
+export default function ProfileScreen({ route }) {
+  const { anonymous } = route.params || {};
   const [showInfo, setShowInfo] = useState(false);
   const [showUserData, setShowUserData] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -36,15 +27,37 @@ const CommunicationScreen = () => {
     );
   };
 
+  const renderMenuItem = (title, onPress) => (
+    <TouchableOpacity
+      onPress={onPress}
+      disabled={!onPress}
+      style={styles.menuItem}
+    >
+      <Text style={styles.menuText}>{title}</Text>
+      <Icon name="chevron-right" size={16} color="#0091D6" />
+    </TouchableOpacity>
+  );
+
   return (
     <View style={commonstyles.container}>
+      {/* Only one HeaderSection1 needed */}
       <HeaderSection1 />
+
       <View style={commonstyles.headerMiddle}>
         <Text style={commonstyles.header2}>ProCiv Calabria</Text>
-        <TouchableOpacity onPress={() => setShowModal(true)}>
-          <Ionicons name="log-out-outline" size={24} color="white" />
-        </TouchableOpacity>
+
+        {anonymous ? null : (
+          <TouchableOpacity onPress={() => setShowModal(true)}>
+            <Ionicons name="log-out-outline" size={24} color="white" />
+          </TouchableOpacity>
+        )}
       </View>
+      {/* se anonimo true stampa ciao altrimenti non stampare nulla*/}
+      {anonymous ? <Text>ciao0</Text> : null}
+      {/* se anonimo true stampa null altrimenti stampa ciao*/}
+      {anonymous ? null : <Text>ciao1</Text>}
+      {/* se anonimo true stampa null altrimenti stampa ciao*/}
+      {anonymous ? <Text>ciao2</Text> : <Text>ciao3</Text>}
 
       <ScrollView style={styles.menuItemsContainer}>
         <TouchableOpacity
@@ -107,9 +120,7 @@ const CommunicationScreen = () => {
             </Text>
             <View style={styles.modalButtonsRow}>
               <TouchableOpacity
-                onPress={() => {
-                  setShowModal(false);
-                }}
+                onPress={() => setShowModal(false)}
                 style={styles.modalButton}
               >
                 <Text style={styles.modalButtonText}>Annulla</Text>
@@ -129,7 +140,7 @@ const CommunicationScreen = () => {
       </Modal>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   menuItemsContainer: {
@@ -163,10 +174,8 @@ const styles = StyleSheet.create({
     color: "#333333",
     lineHeight: 20,
   },
-
   backButton: {
     marginTop: 10,
-
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderRadius: 4,
@@ -213,5 +222,3 @@ const styles = StyleSheet.create({
     color: "red",
   },
 });
-
-export default CommunicationScreen;

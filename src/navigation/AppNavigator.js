@@ -25,10 +25,16 @@ const Tab = createBottomTabNavigator();
 const ProfiloStack = createStackNavigator();
 
 // Stack annidato per Profilo + DatiUtente
-function ProfiloStackScreen() {
+function ProfiloStackScreen({ route }) {
+  const anonymous = route.params?.anonymous || false;
+
   return (
     <ProfiloStack.Navigator screenOptions={{ headerShown: false }}>
-      <ProfiloStack.Screen name="ProfileScreen" component={ProfileScreen} />
+      <ProfiloStack.Screen
+        name="ProfileScreen"
+        component={ProfileScreen}
+        initialParams={{ anonymous }}
+      />
       <ProfiloStack.Screen name="DatiUtente" component={DatiUtente} />
       <ProfiloStack.Screen name="ProfileAbout" component={ProfileAbout} />
 
@@ -117,6 +123,7 @@ function MainTabNavigator({ route }) {
       <Tab.Screen
         name="Profilo"
         component={ProfiloStackScreen}
+        initialParams={{ anonymous }}
         options={{
           title: "Profilo",
           headerShown: false,

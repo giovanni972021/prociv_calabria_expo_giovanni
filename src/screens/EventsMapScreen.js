@@ -104,10 +104,11 @@ export default function EventsMapScreen({ route }) {
         onPress: () => console.log("Mostra dettagli evento:", event),
       },
     ]);
-
+  //se anonimo mostra header section 1b anziche 1b2
   return (
     <SafeAreaView style={commonstyles.container}>
       <HeaderSection1 />
+
       {anonymous ? <HeaderSection1b2 /> : <HeaderSection1b />}
       <HeaderSection1c activeTab="Mappa" />
 

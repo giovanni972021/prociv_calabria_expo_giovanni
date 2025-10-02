@@ -32,7 +32,7 @@ DA TERMINARE ProfileScreen.js ricomincia da qui, profile screen, manca icona, st
 .
 DA TERMINARE , register screen js , registerscreenjs, correggi colore pulsante modifica mail e richiedi nuovo codice, capire perche quando inserisco codice otp in app non funge, elimina effetto scrolling fastidioso
 .
-TUTTO OK MA... WeatherBulletinScreen.js weather bulletin screen, tutto ok, ma perche quando clicco su link parte download automatico? da app play store questo non accade, dipende da me o da link php? ricomincia da qui
+TUTTO OK ... WeatherBulletinScreen.js weather bulletin screen,
 .
 .
 ricomincia da qui
@@ -70,11 +70,9 @@ Account
   controlla icone barra in basso se corrette
   chiedi a gabriele orlando api da importare dentro schermata comunicazioni
   .
-  sotto schermata about separata da pagina profilo vedi cartella foto "about profilo".
   .
   tutti i pulsanti dove non ce altro nella pagina metterli tutto in basso come home page
   .
-  quando accedo con modalita anonima NON devo vedere pulsante segnala
   .
   segnalazioni abilitate solo se telefono autenticato e validato e posizione calabria
   quando utente entra modalita anonima vedi app play store ma Profili attivi è profili come normale idem about anziche info , resto uguale
