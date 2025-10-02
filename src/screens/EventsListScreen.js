@@ -14,9 +14,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { commonstyles } from "../styles/commonstyles";
 import HeaderSection1 from "../components/HeaderSection1"; // ✅ IMPORTA HEADER
 import HeaderSection1b from "../components/Headersection1b"; // ✅ IMPORTA HEADER
+import HeaderSection1b2 from "../components/Headersection1b2"; // ✅ IMPORTA HEADER
+
 import HeaderSection1c from "../components/HeaderSection1c"; // ✅ IMPORTA HEADER
 
-export default function EventsListScreen({ navigation }) {
+export default function EventsListScreen({ navigation, route }) {
+  const { anonymous } = route.params || {};
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -230,10 +233,8 @@ export default function EventsListScreen({ navigation }) {
 
   return (
     <View style={commonstyles.container}>
-      {/* ✅ HEADER IMPORTATO */}
       <HeaderSection1 />
-      <HeaderSection1b />
-
+      {anonymous ? <HeaderSection1b2 /> : <HeaderSection1b />}
       <HeaderSection1c activeTab="Lista" />
 
       {/* Dropdown "Eventi / Le mie Segnalazioni" */}
@@ -282,7 +283,7 @@ export default function EventsListScreen({ navigation }) {
                 style={[
                   styles.circle,
                   selectedType === "Segnalazioni" && {
-                    backgroundColor: "#FF3B30",
+                    backgroundColor: "blue",
                   },
                 ]}
               />
@@ -291,29 +292,30 @@ export default function EventsListScreen({ navigation }) {
         )}
       </View>
 
-      {/* Lista eventi */}
-      <FlatList
-        data={events}
-        renderItem={renderEventItem}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.listContainer}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            colors={["#FF6B35"]}
-          />
-        }
-        ListEmptyComponent={
-          <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>
-              {selectedType === "Segnalazioni"
-                ? "Nessuna segnalazione trovata"
-                : "Nessun evento disponibile"}
-            </Text>
-          </View>
-        }
-      />
+      {!anonymous && (
+        <FlatList
+          data={events}
+          renderItem={renderEventItem}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.listContainer}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              colors={["#FF6B35"]}
+            />
+          }
+          ListEmptyComponent={
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyText}>
+                {selectedType === "Segnalazioni"
+                  ? "Nessuna segnalazione trovata"
+                  : "Nessun evento disponibile"}
+              </Text>
+            </View>
+          }
+        />
+      )}
     </View>
   );
 }

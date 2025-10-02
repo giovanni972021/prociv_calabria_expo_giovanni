@@ -6,11 +6,11 @@ Create report screen da terminare - CreateReportScreen.js , ricomincia da qui
 
 .
 
-events list screen tutto ok – EventsListScreen.js
+events list screen tutto ok – EventsListScreen.js , modalita anonimo ok
 
 .
 
-EventsMapScreen.js – tutto ok ma capire come importare gli eventi da event list screen , ricomincia da qui, events map screen
+EventsMapScreen.js – tutto ok ma capire come importare gli eventi da event list screen , ricomincia da qui, events map screen, ok modalita anonima
 
 .
 

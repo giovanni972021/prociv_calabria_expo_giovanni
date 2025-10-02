@@ -52,12 +52,8 @@ export default function ProfileScreen({ route }) {
           </TouchableOpacity>
         )}
       </View>
-      {/* se anonimo true stampa ciao altrimenti non stampare nulla*/}
-      {anonymous ? <Text>ciao0</Text> : null}
-      {/* se anonimo true stampa null altrimenti stampa ciao*/}
-      {anonymous ? null : <Text>ciao1</Text>}
-      {/* se anonimo true stampa null altrimenti stampa ciao*/}
-      {anonymous ? <Text>ciao2</Text> : <Text>ciao3</Text>}
+
+      {anonymous && <Text>Accedi</Text>}
 
       <ScrollView style={styles.menuItemsContainer}>
         <TouchableOpacity

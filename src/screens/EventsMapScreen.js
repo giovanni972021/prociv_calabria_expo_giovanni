@@ -13,13 +13,13 @@ import { CONFIG } from "../constants/config";
 import { commonstyles } from "../styles/commonstyles";
 import HeaderSection1 from "../components/HeaderSection1";
 import HeaderSection1b from "../components/Headersection1b";
+
 import HeaderSection1b2 from "../components/Headersection1b2";
 
 import HeaderSection1c from "../components/HeaderSection1c";
 
 export default function EventsMapScreen({ route }) {
   const { anonymous } = route.params || {};
-
   const [region, setRegion] = useState(CONFIG.MAP_CONFIG.INITIAL_REGION);
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -46,8 +46,7 @@ export default function EventsMapScreen({ route }) {
           });
         }
       }
-      if (!anonymous) await loadEvents();
-      else setLoading(false);
+      await loadEvents();
     })();
   }, []);
 
@@ -104,14 +103,12 @@ export default function EventsMapScreen({ route }) {
         onPress: () => console.log("Mostra dettagli evento:", event),
       },
     ]);
-  //se anonimo mostra header section 1b anziche 1b2
+
   return (
     <SafeAreaView style={commonstyles.container}>
       <HeaderSection1 />
-
       {anonymous ? <HeaderSection1b2 /> : <HeaderSection1b />}
       <HeaderSection1c activeTab="Mappa" />
-
       <MapView
         provider={PROVIDER_GOOGLE}
         style={commonstyles.flex1}
@@ -134,14 +131,15 @@ export default function EventsMapScreen({ route }) {
               onPress={() => handleMarkerPress(event)}
             />
           ))}
+        {/* chiudi modalita anonimo*/}
       </MapView>
-
-      {loading && (
+      {!anonymous && loading && (
         <View style={styles.loadingOverlay}>
           <ActivityIndicator size="large" color="#FF6B35" />
           <Text style={styles.loadingText}>Caricamento Eventi...</Text>
         </View>
       )}
+      {/* chiudi modalita anonimo*/}
     </SafeAreaView>
   );
 }
